@@ -3,6 +3,8 @@ import cors from 'cors';
 import { mongooseConfig } from './src/config/mongoose';
 import authRouter from './src/routes/auth.routes'
 import placesRouter from './src/routes/places.routes';
+import itineraryRouter from './src/routes/itinerary.routes';
+import userRouter from './src/routes/user.routes';
 
 
 
@@ -21,8 +23,8 @@ app.get('/', (_req, res) => {
 
 
 app.use('/api/auth', authRouter);
-app.use('/api/itineraries', require('./src/routes/itinerary.routes').default);
-app.use('/api/users', require('./src/routes/user.routes').default);
+app.use('/api/itineraries', itineraryRouter);
+app.use('/api/users', userRouter);
 app.use('/api/places', placesRouter);
 
 mongooseConfig();
