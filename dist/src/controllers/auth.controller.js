@@ -32,6 +32,7 @@ const addUser = async (req, res) => {
             email,
             password: hashedPassword,
         });
+        const token = await (0, generateToken_1.generateToken)({ id: newUser._id, username: newUser.username, email: newUser.email });
         res.status(201).json({
             message: 'User created successfully',
             user: {
@@ -39,7 +40,7 @@ const addUser = async (req, res) => {
                 username: newUser.username,
                 email: newUser.email,
             },
-            token: (0, generateToken_1.generateToken)({ id: newUser._id, username: newUser.username, email: newUser.email })
+            token
         });
     }
     catch (error) {
@@ -67,7 +68,11 @@ const loginUser = async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                profilePic: user.profilePicture,
+                firstName: user.firstName,
+                lastName: user.lastName,
             },
+            token: await (0, generateToken_1.generateToken)({ id: user._id, username: user.username, email: user.email })
         });
     }
     catch (error) {
