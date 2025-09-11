@@ -29,7 +29,7 @@ const addUser = async (req, res) => {
             firstName,
             lastName,
             username,
-            email,
+            email: email.toLowerCase().trim(),
             password: hashedPassword,
         });
         const token = await (0, generateToken_1.generateToken)({ id: newUser._id, username: newUser.username, email: newUser.email });

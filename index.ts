@@ -18,6 +18,8 @@ app.get('/', (_req, res) => {
   res.send('Hello, Setince!');
 });
 
+
+
 app.use('/api/auth', authRouter);
 app.use('/api/itineraries', require('./src/routes/itinerary.routes').default);
 app.use('/api/users', require('./src/routes/user.routes').default);

@@ -23,15 +23,15 @@ export interface User {
 
 
 const userSchema = new mongoose.Schema<User>({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    firstName: { type: String, required: true, lowercase: true, trim: true },
+    lastName: { type: String, required: true, lowercase: true, trim: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['user', 'admin', 'seller'], default: 'user' },
     isActive: { type: Boolean, default: false },
     lastLogin: { type: Date },
-    profilePicture: { type: String },
+    profilePicture: { type: String },   
     bio: { type: String },
     preferences: {
         theme: { type: String, default: 'light' },

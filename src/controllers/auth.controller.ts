@@ -30,7 +30,7 @@ const addUser = async (req, res) => {
 			firstName,
 			lastName,
 			username,
-			email,
+			email: email.toLowerCase().trim(),
 			password: hashedPassword,
 		});
 
