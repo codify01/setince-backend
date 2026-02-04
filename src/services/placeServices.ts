@@ -11,6 +11,16 @@ export const createPlace = async (placeData:Place) => {
     }
 }
 
+export const createPlacesBulk = async (placesData: Place[]) => {
+    try {
+        const places = await PlacesModel.insertMany(placesData);
+        return places;
+    } catch (error) {
+        console.error("Error creating places in bulk:", error);
+        throw new Error("Bulk place creation failed");
+    }
+}
+
 export const getPlaceById = async (placeId: string) => {
     try {
         const place = await PlacesModel.findById(placeId);
@@ -34,7 +44,31 @@ export const getAllPlaces = async () => {
     }
 }
 
-export const updatePlace = async (placeId: string, updateData: Partial<Place>) => {
+export const autocompletePlaces = async (query: string, limit = 10) => {
+  try {
+    if (!query || query.trim().length < 2) {
+      return [];
+    }
+
+    const places = await PlacesModel.find({
+      approved: true,
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { address: { $regex: query, $options: 'i' } },
+      ],
+    })
+      .select('name address images category')
+      .limit(limit);
+
+    return places;
+  } catch (error) {
+    console.error('Autocomplete search failed:', error);
+    throw new Error('Autocomplete search failed');
+  }
+};
+
+export const updatePlaceById = async (placeId: string, updateData: Partial<Place>) => {
     try {
         const place = await PlacesModel.findByIdAndUpdate(placeId, updateData, { new: true });
         if (!place) {
@@ -47,7 +81,7 @@ export const updatePlace = async (placeId: string, updateData: Partial<Place>) =
     }
 }
 
-export const deletePlace = async (placeId: string) => {
+export const deletePlaceById = async (placeId: string) => {
     try {
         const place = await PlacesModel.findByIdAndDelete(placeId);
         if (!place) {

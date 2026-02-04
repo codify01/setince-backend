@@ -68,6 +68,9 @@ const placeSchema = new mongoose.Schema<Place>({
 	updatedAt: { type: Date, default: Date.now },
 });
 
+placeSchema.index({ name: 1 });
+placeSchema.index({ address: 1 });
+
 const PlacesModel = mongoose.model<Place>('Places', placeSchema);
 
 export default PlacesModel;

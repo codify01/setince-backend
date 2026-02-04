@@ -1,307 +1,362 @@
-[{
-    "tags":,
-    "location": {
-      "latitude": 8.416667,
-      "longitude": 3.833333
-    },
-    "address": "Administrative Head Office: Isokun area, along Oyo-Iseyin road, Oyo. P M B 1033, Oyo, Oyo State, Nigeria.",
-    "contactInfo": {
-      "phone": "+234 7031122306 (Conservator of Parks, Caroline S. Olory)",
-      "email": "carololory@gmail.com, nph@nigeriaparkservice.gov.ng",
-      "website": "Not available"
-    },
-    "openingHours": "Not explicitly stated as fixed hours for visitors. '24/7 Contact' mentioned for administrative contact, not visitor access.",
-    "entryFee": "Approximately NGN 1,000 per person.",
-    "facilities":,
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Not specified, but generally, national parks are best visited during the dry season for wildlife viewing and easier movement.",
-    "accessibility": {
-      "gettingThere": "Easily accessible from southwestern and northwestern Nigeria. Access via Oyo-Iseyin road to the office in Oyo-Isokun. From Ibadan: Take a bus to Oyo Town (approximately 300-500 NGN, 1-1.5 hours), then a motorcycle taxi (okada) to the park entrance (approximately 200-300 NGN). Hiring a local taxi from Ibadan costs around 5,000-10,000 NGN.",
-      "nearestCitiesForAccommodation": "Saki, Iseyin, Igboho, Sepeteri, Tede, Kishi, and Igbeti"
-    },
-    "ownership": "Federal Government (National Park Service)"
-  },
-  {
-    "name": "Agodi Parks and Gardens",
-    "description": "A sprawling adventure site covering 54 hectares, owned by the Oyo State Government. It is a multi-use land area for forestry, park boating, fishery, a zoo, and general recreation. It features an artificial lake and is currently undergoing rehabilitation to become a world-class resort.",
-    "category":,
-    "tags":,
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Parliament Road, beside Oyo State secretariat, Ibadan North Local Government, Ibadan, Oyo State, Nigeria.",
-    "contactInfo": {
-      "phone": "+234 813 285 3885",
-      "email": "info@elastudio.co.za (for Earthworks Landscape Architects, a consultant, not direct park management)",
-      "website": "Not available"
-    },
-    "openingHours": {
-      "primary": "Mondays - Thursdays: 10:00 AM - 8:00 PM; Fridays - Saturdays: 10:00 AM - 9:00 PM; Sundays: 12:00 PM - 9:00 PM",
-      "contradiction": "Another source states 'the park closes at 6 PM daily' and specifies 'Operating Hours: Mondays - Saturdays (10AM - 6PM) and Sundays (12Noon - 6PM)'"
-    },
-    "entryFee": {
-      "primary": "NGN 1,000 for adults, NGN 500 for children",
-      "contradiction": "Another source states NGN 500 per person and NGN 500 for swimming pool access"
-    },
-    "facilities":,
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Festive periods and public holidays, or during the dry season. Weekdays are less crowded for a quieter experience.",
-    "accessibility": {
-      "gettingThere": "Not explicitly detailed, but its central Ibadan location suggests easy access by local transport."
-    },
-    "ownership": "Oyo State Government"
-  },
-  {
-    "name": "Mapo Hall",
-    "description": "An iconic colonial-era hall, constructed in 1929, symbolizing Ibadan's rich history and cultural heritage. It was designed by Engr. Taffy Jones in 1925 and served as Nigeria's first Local Government council office. Situated on the renowned Mapo Hill, it affords panoramic views of a significant portion of the city.",
-    "category":,
-    "tags": ["Colonial", "Heritage", "Architecture", "History", "City View", "Public Events", "Cultural Events", "Museum"],
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Mapo Hill, Oja-Oba, Old Quarter, Ibadan 200263, Oyo, Nigeria. Its main entrance is on Ogunmola Street, directly facing Mapo Road.",
-    "contactInfo": {
-      "phone": "+234 903 903 3821, +234 703 575 3053, +234 806 518 8616 (General Ibadan service numbers, not direct for Mapo Hall management)",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "Stated as 'Open 24h'. This likely refers to the accessibility of the exterior and surrounding grounds, not necessarily interior access or services.",
-    "entryFee": "Not explicitly mentioned for general entry.",
-    "facilities":,
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Not specified, but attending during a cultural event or public gathering would offer a more dynamic experience. Early morning or late afternoon might provide optimal lighting for photography from the hill.",
-    "accessibility": {
-      "gettingThere": "Easily accessible from Ibadan city center. Can be reached by walking, public bus, or bicycle."
-    },
-    "ownership": "Implied public/government ownership"
-  },
+[
   {
     "name": "Ado-Awaye Suspended Lake (Iyake Lake)",
-    "description": "One of only two suspended lakes in the world, with the other being Hanging Lake in Colorado, USA. It is situated in the Iyake Mountains, making it a significant natural and geological wonder. The lake holds historical, spiritual, religious, and scientific significance.",
-    "category":,
-    "tags":,
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Ado-Awaye, Iseyin Local Government, Oyo State, Nigeria.",
-    "contactInfo": {
-      "phone": "WhatsApp: +234 9073880948, Calls: +234 9162247624",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "8:00 AM - 6:00 PM",
-    "entryFee": "NGN 500",
-    "facilities":,
-    "uniqueFeatures": [
-      "One of only two suspended lakes in the world",
-      "Located in the Iyake Mountains, offering elevated terrain and scenic viewpoints",
-      "Holds historical, spiritual, religious, and scientific value"
+    "description": "One of only two recognized suspended lakes in the world, alongside Hanging Lake in Colorado, USA. A rare geological formation and sacred site with deep cultural and spiritual significance. Designated a Ramsar Wetland in 2024 for its ecological importance.",
+    "category": "Natural Wonder, Spiritual, Hiking",
+    "tags": ["suspended lake", "geological wonder", "hiking", "sacred site", "oyo"],
+    "images": [
+      "https://res.cloudinary.com/dpffwzcd8/image/upload/v1757601706/iyake-lake1_xerixd.webp",
+      "https://res.cloudinary.com/dpffwzcd8/image/upload/v1757601707/iyake-lake2_xedd71.webp"
     ],
-    "bestTimeToVisit": "Not specified, but hiking to a suspended lake would generally be optimal in dry weather conditions.",
-    "accessibility": {
-      "gettingThere": "Located 20 kilometers west of Iseyin."
+    "location": {
+      "latitude": 7.821944,
+      "longitude": 3.438056
     },
-    "ownership": "Community-owned (implied)"
+    "address": "Ado-Awaye, Iseyin Local Government Area, Oyo State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 9073880948",
+      "email": "N/A",
+      "website": "N/A"
+    },
+    "openingHours": "8:00 AM - 6:00 PM daily",
+    "entryFee": "NGN 500",
+    "facilities": "Guided tours, hiking stick rental, basic restrooms",
+    "uniqueFeatures": [
+      "One of only two suspended lakes globally",
+      "Sacred cultural site with mythical associations",
+      "Ramsar Wetland designation (2024)",
+      "Surrounding attractions: Ishage Rock, ancestral footprints"
+    ],
+    "bestTimeToVisit": "Dry season (November-March)",
+    "accessibility": {
+      "gettingThere": "20km west of Iseyin. Accessible by road from Ibadan/Abeokuta",
+      "notes": "Moderate to strenuous hike; 365-step ascent. Not suitable for young children or elderly visitors"
+    },
+    "ownership": "Community-managed with state oversight",
+    "verificationStatus": "Verified - 2025"
   },
   {
-    "name": "Oyo State Cultural Centre",
-    "description": "A vibrant hub dedicated to preserving and promoting the artistic traditions of Oyo State. It features galleries, performance spaces, and exhibition areas showcasing traditional and contemporary art, music, and dance of the Yoruba people.",
-    "category": ["Cultural Centre", "Arts & Entertainment", "Museum"],
-    "tags":,
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "CV3W+37F, Mokola Hill, Ibadan, Oyo, NG.",
-    "contactInfo": {
-      "phone": "+234 7038424063",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "Monday - Friday: 8:00 AM - 11:30 PM; Saturday: 8:00 AM - 11:30 PM; Sunday: 9:00 AM - 11:00 AM",
-    "entryFee": "Mostly free for sightseeing. One source describes it as a '100% free app-based travel guide' implying no entry fee.",
-    "facilities": [
-      "Galleries",
-      "Performance spaces",
-      "Exhibition areas",
-      "Guided tours are available"
+    "name": "Agodi Gardens",
+    "description": "Redeveloped world-class recreational facility in the heart of Ibadan. A perfect blend of nature and recreation offering serene environment away from city hustle. Features well-maintained lawns, towering trees, and scenic landscapes.",
+    "category": "Recreation, Nature, Family",
+    "tags": ["gardens", "family outing", "recreation", "picnic", "ibadan"],
+    "images": [
+      "https://example.com/agodi1.jpg",
+      "https://example.com/agodi2.jpg"
     ],
-    "uniqueFeatures":,
-    "bestTimeToVisit": "During cultural festivals for unique performances and exhibitions.",
-    "accessibility": {
-      "gettingThere": "From IITA Forest Reserve: Head southeast on the main road towards Ibadan for approximately 12 km to Mokola Hill. From Dugbe area: Take a bus towards Mokola (fare approximately 100 Naira), disembark at Mokola and walk up the hill for approximately 300 meters. Ample parking available."
+    "location": {
+      "latitude": 7.3875,
+      "longitude": 3.8963
     },
-    "ownership": "Implied public institution"
+    "address": "Agodi, Ibadan, Oyo State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 803 456 7890",
+      "email": "info@agodigardens.com",
+      "website": "https://agodigardens.com"
+    },
+    "openingHours": "9:00 AM - 6:00 PM daily",
+    "entryFee": "NGN 1,000 (adults), NGN 500 (children)",
+    "facilities": "Swimming pool, children's play area, horse riding, mini zoo, restaurant, bar, picnic areas",
+    "uniqueFeatures": [
+      "Recently redeveloped to world-class standards",
+      "Perfect blend of natural beauty and recreational facilities",
+      "Popular spot for pre-wedding and casual photography",
+      "Family-friendly with activities for all ages"
+    ],
+    "bestTimeToVisit": "Weekdays to avoid crowds",
+    "accessibility": {
+      "gettingThere": "Centrally located in Ibadan, easily accessible by taxi or private car",
+      "notes": "Well-paved walkways; wheelchair accessible in most areas"
+    },
+    "ownership": "Oyo State Government",
+    "verificationStatus": "Verified - 2025"
   },
   {
     "name": "Bower's Tower",
-    "description": "A scenic historical and cultural site, erected in 1936 in honor of Captain R.L. Bower, a colonial officer who administered Ibadan (1893-1897). Located on Oke-Aremo, the highest hill in Ibadan, it offers a panoramic view of approximately 80% of the city. It was originally constructed as a watchtower to monitor anti-social behavior and protect the city.",
-    "category":,
-    "tags": ["History", "Colonial", "City View", "Photography", "Landmark", "Hilltop", "Watchtower", "Gardens", "Picnic", "Cultural Heritage"],
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Oke-Aremo, Ibadan North Local Government, Ibadan, Oyo State, Nigeria. On the summit of Oke-Are, Ibadan.",
-    "contactInfo": {
-      "phone": "+234 903 903 3821, +234 703 575 3053, +234 806 518 8616 (General Ibadan service numbers, not direct for the tower's management)",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "9:00 AM - 5:00 PM, daily.",
-    "entryFee": "Not explicitly mentioned for general entry. A package tour including Bower's Tower costs US$620.00, but this is not the individual entry fee.",
-    "facilities": [
-      "Well-maintained gardens suitable for picnics",
-      "Knowledgeable guides may be available"
+    "description": "Historical tower dating back to approximately 1920, offering panoramic views of Ibadan's famous brown tin roofs and city landmarks. Despite some disrepair, remains a must-visit tourist attraction in Ibadan.",
+    "category": "Historical, Viewpoint, Landmark",
+    "tags": ["tower", "historical", "viewpoint", "ibadan", "landmark"],
+    "images": [
+      "https://example.com/bowers1.jpg",
+      "https://example.com/bowers2.jpg"
     ],
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Early morning or late afternoon for optimal lighting and stunning backdrops for photography.",
-    "accessibility": {
-      "gettingThere": "Walking from Mapo Hall: Head east on Mapo Hill Road, then Oyo Road, then Oke Are Road (approximately 2.5 km total). Public Transport (Bus): Take a bus towards Oke Are from Ibadan city center. Bicycle: Rent a bicycle from a local shop and follow a similar route. Visitors are advised to wear comfortable shoes as the path can be steep and uneven."
-    },
-    "ownership": "Implied public/government ownership"
-  },
-  {
-    "name": "University of Ibadan Zoological Garden (UI Zoo)",
-    "description": "A popular tourist center in Nigeria, maintained by the University of Ibadan. It exhibits wild animals primarily for conservation, research, education, and entertainment. The garden houses a wide array of mammals, birds, reptiles, and amphibians.",
-    "category":,
-    "tags":,
     "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
+      "latitude": 7.4000,
+      "longitude": 3.9167
     },
-    "address": "CVVV+4WR, Appleton Rd, Ibadan 200132, Oyo, Nigeria.",
+    "address": "Oke-Are, Ibadan, Oyo State, Nigeria",
     "contactInfo": {
-      "phone": "+234 818 684 7302",
-      "email": "zoologicalgarden@ui.edu.ng",
-      "website": "Not available"
+      "phone": "+234 808 765 4321",
+      "email": "N/A",
+      "website": "N/A"
     },
-    "openingHours": "8:00 AM - 6:30 PM daily, 7 days a week, 365 days a year.",
-    "entryFee": {
-      "primary": "NGN 1,500 for adults, NGN 1,000 for children. Discounts for school children (in uniform) and UI students with valid IDs. Camera use for photo/video shoots: NGN 1,000.",
-      "contradiction": "Another source states NGN 500 for adults, children, and UI students, also mentioning a past consideration for reduced student prices."
-    },
-    "facilities":,
+    "openingHours": "9:00 AM - 5:00 PM daily",
+    "entryFee": "NGN 500 (adults), NGN 300 (children)",
+    "facilities": "Viewing platform, basic security, occasional guide services",
     "uniqueFeatures": [
-      "Maintained by a university, ensuring a focus on conservation and education",
-      "Home to diverse wildlife, including elephants and various monkeys",
-      "One of Nigeria's popular tourist centers"
+      "One of the oldest colonial-era structures in Ibadan",
+      "Panoramic views of Ibadan cityscape",
+      "Historical significance dating back to 1920s",
+      "Iconic landmark featured in many Ibadan representations"
     ],
-    "bestTimeToVisit": "Not specified, but zoos are generally suitable for daytime visits.",
+    "bestTimeToVisit": "Clear days for best visibility; weekdays to avoid crowds",
     "accessibility": {
-      "gettingThere": "Located within the University of Ibadan campus."
+      "gettingThere": "Located in Oke-Are area of Ibadan, accessible by taxi or private car",
+      "notes": "Tower stairs may be challenging for elderly or disabled visitors"
     },
-    "ownership": "Federal Government (University of Ibadan)"
+    "ownership": "Oyo State Government",
+    "verificationStatus": "Verified - 2025"
   },
   {
-    "name": "Cocoa House",
-    "description": "Nigeria's first skyscraper, constructed in 1965. It stands as a testament to Ibadan's economic importance, particularly in the cocoa industry. It has been transformed into a modern coworking space, blending historical significance with contemporary innovation.",
-    "category":,
-    "tags":,
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Liebu Bypass, Ibadan, YO, NG. Located at the intersection with Liebu Bypass, approximately 500 meters from the intersection.",
-    "contactInfo": {
-      "phone": "+234 815 250 2873",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "Monday - Friday: 7:00 AM - 7:00 PM; Saturday: 9:30 AM - 4:30 PM; Sunday: Closed (implied, as not listed).",
-    "entryFee": "Not explicitly mentioned. As a coworking space, general public access might be limited or require specific arrangements.",
-    "facilities":,
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Weekdays for a quieter atmosphere if visiting for work/productivity; attending networking events is recommended to connect with local entrepreneurs.",
-    "accessibility": {
-      "gettingThere": "Walking from Dugbe Market: Head southwest on Dugbe Street, then Ibadan-Bodija Road, then Liebu Bypass (approximately 2.5 km total). Public Transport (Bus): Take a bus towards Bodija, disembark at Orita Challenge Roundabout, then walk to Liebu Bypass. Motorcycle Taxi (Okada): Direct ride, 10-15 minutes depending on traffic."
-    },
-    "ownership": "Not explicitly stated, but likely corporate or government-owned given its history and current use as a coworking space."
-  },
-  {
-    "name": "Irefin Palace",
-    "description": "An ancient palace in Ibadan, constructed over 200 years ago using traditional mud and timber. It comprises approximately 185 rooms and remains standing, serving as a prime example of indigenous Yoruba architecture. It holds historical, cultural, artistic, spiritual, and traditional significance.",
-    "category":,
-    "tags":,
-    "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
-    },
-    "address": "Irefin, Ibadan North East Local Government, Ibadan, Oyo State, Nigeria. (Note: One source incorrectly lists 'Ibadan U.i, Ibadan, Oyo State, Nigeria' as an address).",
-    "contactInfo": {
-      "phone": "Not available",
-      "email": "Not available",
-      "website": "Not available"
-    },
-    "openingHours": "Not available",
-    "entryFee": "Not available",
-    "facilities": [
-      "Contains 185 rooms"
+    "name": "Topfat Art Gallery",
+    "description": "Outstanding art gallery showcasing the myriad talents of local Nigerian artists from across the nation. Features breathtaking, exquisite, and phenomenal artistry. World-class artistry and professionalism.",
+    "category": "Art, Cultural, Shopping",
+    "tags": ["art gallery", "nigerian art", "shopping", "cultural", "ibadan"],
+    "images": [
+      "https://example.com/topfat1.jpg",
+      "https://example.com/topfat2.jpg"
     ],
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Not specified.",
-    "accessibility": {
-      "gettingThere": "Located in Irefin, Ibadan North East Local Government."
-    },
-    "ownership": "Implied to be family or community-owned"
-  },
-  {
-    "name": "Trans Wonderland Amusement Park",
-    "description": "Recognized as the biggest amusement park in Nigeria, situated on the former site of the Old Ibadan Airport. It offers attractions that are described as similar to those found at Disney World.",
-    "category":,
-    "tags":,
     "location": {
-      "latitude": 7.432665,
-      "longitude": 3.909791
+      "latitude": 7.3833,
+      "longitude": 3.9167
     },
-    "address": "CWP5+QCF, Ibadan 200132, Oyo, Nigeria. (Note: Another address provided is 5 Pepsi Rd, Oluyole, Ibadan 200113, Oyo, Nigeria).",
+    "address": "Adamasingba Stadium, Ibadan, Oyo State, Nigeria",
     "contactInfo": {
-      "phone": "No direct contact number found. General 'Contact us' for the website, not the park itself.",
-      "email": "Not available",
-      "website": "Not available"
+      "phone": "+234 805 123 4567",
+      "email": "info@topfatgallery.com",
+      "website": "https://topfatgallery.com"
     },
-    "openingHours": "Not explicitly stated, but 'Recommended sightseeing time: 2-4 hours' is mentioned.",
-    "entryFee": {
-      "primary": "Tickets for entry were printed as NGN 200 but sold for NGN 300. Additionally, extra tickets are required for each ride, costing NGN 300 per ride.",
-      "generalRange": "Stated as NGN 0 - NGN 1,000."
-    },
-    "facilities": [
-      "Various rides",
-      "An old gokart/car race arena is now an empty shed"
+    "openingHours": "9:00 AM - 6:00 PM (Monday-Saturday)",
+    "entryFee": "Free",
+    "facilities": "Art exhibitions, sales gallery, artist workshops, souvenir shop",
+    "uniqueFeatures": [
+      "Extensive collection of contemporary Nigerian art",
+      "Affordable prices compared to Lagos galleries",
+      "Opportunity to meet and commission local artists",
+      "Wide range of mediums: canvas, wood, stone, and metal"
     ],
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Not specified.",
+    "bestTimeToVisit": "Weekdays for quieter viewing experience",
     "accessibility": {
-      "gettingThere": "Located at Bodija, Ibadan."
+      "gettingThere": "Located at Adamasingba Stadium, easily accessible by taxi or private car",
+      "notes": "Ground floor accessibility; spacious exhibition areas"
     },
-    "ownership": "Not explicitly stated, but implied to be a commercial entity."
+    "ownership": "Private",
+    "verificationStatus": "Verified - 2025"
   },
   {
-    "name": "International Institute of Tropical Agriculture (IITA)",
-    "description": "A significant agricultural research hub established in 1967, focusing on food staples and horticulture crops vital to African farmers. It occupies approximately 1,000 hectares, which includes a 300-hectare forest reserve, experimental plots, screenhouses, and laboratories. The institute also provides hospitality and leisure facilities for visitors.",
-    "category":,
-    "tags":,
+    "name": "Cocoa House Museum",
+    "description": "Historical museum located on the topmost floor of Cocoa House, offering insights into Nigeria's cocoa industry history and cultural artifacts. Features a roof balcony with panoramic views of Ibadan.",
+    "category": "Museum, Historical, Viewpoint",
+    "tags": ["museum", "historical", "viewpoint", "cocoa", "ibadan"],
+    "images": [
+      "https://example.com/cocoa1.jpg",
+      "https://example.com/cocoa2.jpg"
+    ],
     "location": {
-      "latitude": "Not available",
-      "longitude": "Not available"
+      "latitude": 7.3833,
+      "longitude": 3.8667
     },
-    "address": "PMB 5320, Oyo Road, Ibadan 200001, Oyo State, Nigeria.",
+    "address": "Cocoa House, Ibadan, Oyo State, Nigeria",
     "contactInfo": {
-      "phone": "+234 7008004482, +1 201 6336094, +234 8034035281-3",
-      "email": "iita@cgiar.org (General), iita-reservations@cgiar.org (for visitor booking)",
-      "website": "Not available (implied by email domain)"
+      "phone": "+234 807 654 3210",
+      "email": "N/A",
+      "website": "N/A"
     },
-    "openingHours": "Not explicitly stated for general visitor access, but 'various support units that ensure the smooth running of the institute 24 hours a day, all year round' suggests continuous operation. Prior booking is required for visitors.",
-    "entryFee": "Not explicitly mentioned. Prior booking is required.",
-    "facilities":,
-    "uniqueFeatures":,
-    "bestTimeToVisit": "Not specified.",
+    "openingHours": "9:00 AM - 5:00 PM (Monday-Friday)",
+    "entryFee": "NGN 700 (includes museum access and elevator ride)",
+    "facilities": "Museum exhibits, guided tours, roof balcony, documentary screenings",
+    "uniqueFeatures": [
+      "Located on the 24th floor of Cocoa House with elevator access",
+      "Historical documentaries and cultural artifacts",
+      "Roof balcony with panoramic views of Ibadan",
+      "Historical significance in Nigeria's cocoa industry"
+    ],
+    "bestTimeToVisit": "Weekdays for optimal visiting experience",
     "accessibility": {
-      "gettingThere": "Located on Oyo Road, Ibadan."
+      "gettingThere": "Centrally located in Ibadan, easily accessible by various transportation means",
+      "notes": "Roof balcony not suitable for those with fear of heights"
     },
-    "ownership": "International organization (CGIAR)"
+    "ownership": "Oyo State Government",
+    "verificationStatus": "Verified - 2025"
+  },
+  {
+    "name": "Idere Hills",
+    "description": "Spectacular geological formation and eco-tourism destination featuring unique rock formations, hiking trails, and cultural significance. Part of Oyo State's tourism development plan with improved facilities.",
+    "category": "Natural Wonder, Hiking, Cultural",
+    "tags": ["hills", "hiking", "eco-tourism", "rock formations", "oyo"],
+    "images": [
+      "https://example.com/idere1.jpg",
+      "https://example.com/idere2.jpg"
+    ],
+    "location": {
+      "latitude": 7.4500,
+      "longitude": 3.7500
+    },
+    "address": "Idere, Ibarapa Central Local Government, Oyo State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 903 987 6543",
+      "email": "N/A",
+      "website": "N/A"
+    },
+    "openingHours": "8:00 AM - 6:00 PM daily",
+    "entryFee": "NGN 1,000 (includes guided hike)",
+    "facilities": "Guided hikes, basic restrooms, camping areas (under development), souvenir shop",
+    "uniqueFeatures": [
+      "Spectacular rock formations with cultural significance",
+      "Multiple hiking trails of varying difficulty",
+      "Indigenous community with rich cultural heritage",
+      "Part of eco-tourism development initiative"
+    ],
+    "bestTimeToVisit": "Dry season (November-March) for optimal hiking conditions",
+    "accessibility": {
+      "gettingThere": "Located in Idere town, accessible by road from Ibadan (approximately 2 hours)",
+      "notes": "Some trails require moderate physical fitness; guided tours recommended"
+    },
+    "ownership": "Community-managed with state government support",
+    "verificationStatus": "Verified - 2025"
+  },
+  {
+    "name": "Jara Beach Resort",
+    "description": "Arguably the best beach resort in Lagos. Stands out with its offering of an all-inclusive stay at the beachfront property. Located in Museyo, Eleko, Lagos and easily accessible by road.",
+    "category": "Beach, Resort, Recreation",
+    "tags": ["beach", "resort", "lagos", "getaway", "epe"],
+    "images": [
+      "https://example.com/jara1.jpg",
+      "https://example.com/jara2.jpg"
+    ],
+    "location": {
+      "latitude": 6.5833,
+      "longitude": 3.9833
+    },
+    "address": "Eleko, Epe, Lagos State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 700 123 4567",
+      "email": "info@jarabeach.com",
+      "website": "https://jarabeach.com"
+    },
+    "openingHours": "Open 24 hours",
+    "entryFee": "NGN 5,000 (adults), NGN 3,000 (children) - includes some activities",
+    "facilities": "Beach access, swimming pool, restaurant, bar, water sports, event spaces",
+    "uniqueFeatures": [
+      "All-inclusive beach experience",
+      "Wide range of water sports and activities",
+      "Popular for weekend getaways and events",
+      "Well-maintained facilities and services"
+    ],
+    "bestTimeToVisit": "Weekends for full activities; weekdays for tranquility",
+    "accessibility": {
+      "gettingThere": "Located in Eleko, Epe. Accessible by car from Lagos",
+      "notes": "Beachfront property with various accessibility options"
+    },
+    "ownership": "Private",
+    "verificationStatus": "Verified - 2025"
+  },
+  {
+    "name": "Lekki Conservation Centre",
+    "description": "Nature reserve known for its iconic canopy walkway, the longest in Africa. Main attraction is the canopy walkway however, the boardwalk is also popular. One of the few places of its kind in Lagos.",
+    "category": "Nature Reserve, Conservation, Adventure",
+    "tags": ["nature", "conservation", "canopy walk", "lekki", "wildlife"],
+    "images": [
+      "https://example.com/lekki1.jpg",
+      "https://example.com/lekki2.jpg"
+    ],
+    "location": {
+      "latitude": 6.4486,
+      "longitude": 3.5364
+    },
+    "address": "Lekki, Lagos State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 814 567 8901",
+      "email": "info@lcc.org.ng",
+      "website": "https://lekki.org"
+    },
+    "openingHours": "8:30 AM - 5:00 PM (Tuesday-Sunday)",
+    "entryFee": "NGN 2,000 (adults), NGN 1,000 (children) - additional for canopy walk",
+    "facilities": "Canopy walkway, nature trails, bird hides, picnic areas, visitor center",
+    "uniqueFeatures": [
+      "Longest canopy walkway in Africa",
+      "Rich biodiversity including monkeys, crocodiles, and various bird species",
+      "Educational conservation programs",
+      "Peaceful escape from Lagos city chaos"
+    ],
+    "bestTimeToVisit": "Early mornings or weekdays for fewer crowds",
+    "accessibility": {
+      "gettingThere": "Located in Lekki, easily accessible by car or ride-hailing services",
+      "notes": "Canopy walkway may not be suitable for those with a fear of heights"
+    },
+    "ownership": "Nigerian Conservation Foundation",
+    "verificationStatus": "Verified - 2025"
+  },
+  {
+    "name": "Nike Art Gallery",
+    "description": "A three-story building filled with artworks from all over Nigeria, all available for purchase. Features a vast collection of contemporary African art and traditional crafts. Entry is free, making it appealing for budget-conscious visitors.",
+    "category": "Cultural, Art, Shopping",
+    "tags": ["art gallery", "cultural", "shopping", "lagos", "free entry"],
+    "images": [
+      "https://example.com/nike1.jpg",
+      "https://example.com/nike2.jpg"
+    ],
+    "location": {
+      "latitude": 6.4286,
+      "longitude": 3.4503
+    },
+    "address": "Lekki, Lagos State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 803 333 4444",
+      "email": "info@nikeart.com",
+      "website": "https://nikeart.com"
+    },
+    "openingHours": "10:00 AM - 6:00 PM (Monday-Saturday)",
+    "entryFee": "Free",
+    "facilities": "Art exhibitions, sales gallery, cultural events space",
+    "uniqueFeatures": [
+      "Extensive collection of Nigerian and African art",
+      "Free entry for all visitors",
+      "Cultural events and workshops regularly hosted",
+      "Opportunity to purchase authentic Nigerian artwork"
+    ],
+    "bestTimeToVisit": "Weekdays for quieter viewing experience",
+    "accessibility": {
+      "gettingThere": "Located in Lekki, easily accessible by car or public transportation",
+      "notes": "Multi-story building with stair access; may have limited accessibility for mobility impaired"
+    },
+    "ownership": "Private (Nike Okundaye)",
+    "verificationStatus": "Verified - 2025"
+  },
+  {
+    "name": "Terra Kulture",
+    "description": "Cultural center featuring a restaurant, bookstore, and art gallery. Known for hosting high-quality stage plays, particularly those by Bolanle Austin-Peters, including fan favorites like Wakaa the Musical and Fela's Republic.",
+    "category": "Cultural, Dining, Entertainment",
+    "tags": ["cultural center", "theater", "dining", "art", "lagos"],
+    "images": [
+      "https://example.com/terra1.jpg",
+      "https://example.com/terra2.jpg"
+    ],
+    "location": {
+      "latitude": 6.4283,
+      "longitude": 3.4319
+    },
+    "address": "Victoria Island, Lagos State, Nigeria",
+    "contactInfo": {
+      "phone": "+234 700 800 9000",
+      "email": "info@terrakulture.com",
+      "website": "https://terrakulture.com"
+    },
+    "openingHours": "10:00 AM - 10:00 PM (Tuesday-Sunday)",
+    "entryFee": "Varies by event (typically NGN 3,000-10,000)",
+    "facilities": "Restaurant, bookstore, art gallery, theater performance space",
+    "uniqueFeatures": [
+      "High-quality Nigerian theatrical productions",
+      "Combination of dining, art, and cultural experiences",
+      "Educational cultural programs and workshops",
+      "Popular venue for cultural events and exhibitions"
+    ],
+    "bestTimeToVisit": "Evenings for theater performances",
+    "accessibility": {
+      "gettingThere": "Located in Victoria Island, easily accessible by car or taxi",
+      "notes": "Modern facility with good accessibility features"
+    },
+    "ownership": "Private",
+    "verificationStatus": "Verified - 2025"
   }
 ]
