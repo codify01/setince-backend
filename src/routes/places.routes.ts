@@ -5,8 +5,8 @@ const placesRouter = Router();
 
 
 placesRouter.get('/', fetchAllPlaces);
+placesRouter.get('/search/', searchPlaces);
 placesRouter.get('/:id', fetchPlaceById);
-placesRouter.get('/search/:query', searchPlaces);
 placesRouter.post('/create', addPlace);
 placesRouter.post('/create-bulk', addPlacesBulk); 
 placesRouter.put('/update/:id', updatePlace);
