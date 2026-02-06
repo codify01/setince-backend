@@ -5,6 +5,7 @@ import authRouter from './src/routes/auth.routes'
 import placesRouter from './src/routes/places.routes';
 import itineraryRouter from './src/routes/itinerary.routes';
 import userRouter from './src/routes/user.routes';
+import tabsRouter from './src/routes/tabs.routes';
 
 
 
@@ -26,6 +27,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/itineraries', itineraryRouter);
 app.use('/api/users', userRouter);
 app.use('/api/places', placesRouter);
+app.use('/api/tabs', tabsRouter);
 
 mongooseConfig();
 

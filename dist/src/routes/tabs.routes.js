@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const tabs_controller_1 = require("../controllers/tabs.controller");
+const tabsRouter = (0, express_1.Router)();
+// tabsRouter.use(protect);
+tabsRouter.get('/home', tabs_controller_1.getHomeTab);
+tabsRouter.get('/explore', tabs_controller_1.getExploreTab);
+tabsRouter.get('/trips', tabs_controller_1.getTripsTab);
+tabsRouter.get('/profile', tabs_controller_1.getProfileTab);
+tabsRouter.get('/saved', tabs_controller_1.getSavedTab);
+exports.default = tabsRouter;
