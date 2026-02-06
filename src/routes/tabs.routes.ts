@@ -10,7 +10,7 @@ import { protect } from '../middlewares/auth.middleware';
 
 const tabsRouter = Router();
 
-// tabsRouter.use(protect);
+tabsRouter.use(protect);
 
 tabsRouter.get('/home', getHomeTab);
 tabsRouter.get('/explore', getExploreTab);
