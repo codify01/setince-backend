@@ -5,7 +5,7 @@ const placeServices_1 = require("../services/placeServices");
 const responseHelper_1 = require("../helpers/responseHelper");
 const addPlace = async (req, res) => {
     try {
-        const { name, description, category, images, address, latitude, longitude, tags, openingHours, entryFee, bestTimeToVisit, facilities, uniqueFeatures, accessibility, email, location, contactInfo, phone, website, ownership, } = req.body;
+        const { name, description, category, categoryId, city, cityId, images, address, latitude, longitude, tags, openingHours, openingHoursWeekly, entryFee, bestTimeToVisit, facilities, uniqueFeatures, accessibility, email, location, contactInfo, phone, website, ownership, } = req.body;
         // Validation
         if (!name || !description || !address) {
             return (0, responseHelper_1.sendError)(res, 'Missing required fields', 400);
@@ -14,6 +14,9 @@ const addPlace = async (req, res) => {
             name,
             description,
             category,
+            categoryId,
+            city,
+            cityId,
             tags,
             images,
             address,
@@ -29,6 +32,7 @@ const addPlace = async (req, res) => {
             // },
             contactInfo,
             openingHours,
+            openingHoursWeekly,
             entryFee,
             bestTimeToVisit,
             facilities,

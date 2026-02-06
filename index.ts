@@ -6,6 +6,10 @@ import placesRouter from './src/routes/places.routes';
 import itineraryRouter from './src/routes/itinerary.routes';
 import userRouter from './src/routes/user.routes';
 import tabsRouter from './src/routes/tabs.routes';
+import categoriesRouter from './src/routes/categories.routes';
+import reviewsRouter from './src/routes/reviews.routes';
+import cityRouter from './src/routes/city.routes';
+import tripRouter from './src/routes/trip.routes';
 
 
 
@@ -28,6 +32,10 @@ app.use('/api/itineraries', itineraryRouter);
 app.use('/api/users', userRouter);
 app.use('/api/places', placesRouter);
 app.use('/api/tabs', tabsRouter);
+app.use('/api/categories', categoriesRouter);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/cities', cityRouter);
+app.use('/api/trips', tripRouter);
 
 mongooseConfig();
 

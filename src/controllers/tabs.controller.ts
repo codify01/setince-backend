@@ -1,5 +1,9 @@
 import PlacesModel from '../models/places.model';
 import ItineraryModel from '../models/itinerary.model';
+import CategoryModel from '../models/category.model';
+import TripModel from '../models/trip.model';
+import { getNearbyPlaces } from '../services/placeServices';
+import { getTravelTimesFromOrigin } from '../services/mapboxMatrix.service';
 
 const toStringId = (value: any) => String(value?._id ?? value ?? '');
 
@@ -29,6 +33,62 @@ const formatDistance = (km: number | null) => {
   return `${km.toFixed(1)} km`;
 };
 
+const formatDuration = (seconds: number) => {
+  if (!Number.isFinite(seconds)) return '';
+  const minutes = Math.max(1, Math.round(seconds / 60));
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const remaining = minutes % 60;
+  return remaining ? `${hours}h ${remaining}m` : `${hours}h`;
+};
+
+const scoreByRatingAndTime = (rating: number, travelSeconds: number) => {
+  const ratingScore = Math.max(0, Math.min(1, rating / 5));
+  const travelMinutes = Number.isFinite(travelSeconds) ? travelSeconds / 60 : 120;
+  const distanceScore = Math.max(0, 1 - travelMinutes / 60);
+  return 0.6 * ratingScore + 0.4 * distanceScore;
+};
+
+const buildTravelDurationMap = async (
+  origin: { lat: number; lng: number },
+  places: any[]
+) => {
+  const durations = new Array<number>(places.length).fill(Number.POSITIVE_INFINITY);
+  const destinations: { lat: number; lng: number }[] = [];
+  const indices: number[] = [];
+
+  places.forEach((place, index) => {
+    const lat = Number(place.location?.latitude);
+    const lng = Number(place.location?.longitude);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      destinations.push({ lat, lng });
+      indices.push(index);
+    }
+  });
+
+  if (destinations.length === 0) {
+    return durations;
+  }
+
+  try {
+    const matrix = await getTravelTimesFromOrigin(
+      origin,
+      destinations,
+      'mapbox/driving-traffic'
+    );
+    matrix.durations.forEach((duration, idx) => {
+      const placeIndex = indices[idx];
+      if (placeIndex !== undefined) {
+        durations[placeIndex] = duration;
+      }
+    });
+  } catch (_error) {
+    return durations;
+  }
+
+  return durations;
+};
+
 const getUserSummary = (user: any) => ({
   _id: toStringId(user),
   firstName: user?.firstName || '',
@@ -42,13 +102,12 @@ export const getHomeTab = async (req, res) => {
     const lat = parseNumber(req.query.lat);
     const lng = parseNumber(req.query.lng);
 
-    const [placesForCategories, topPlaces, recentTrips] = await Promise.all([
-      PlacesModel.find({ category: { $exists: true, $ne: '' } })
-        .select('category images')
-        .limit(100),
+    const [categoriesSource, topPlaces, recentTrips] = await Promise.all([
+      CategoryModel.find({ isActive: true }).select('title image'),
       PlacesModel.find({})
         .sort({ 'ratings.averageRating': -1, createdAt: -1 })
-        .select('name description images ratings location category')
+        .select('name description images ratings location category categoryId')
+        .populate('categoryId', 'title')
         .limit(20),
       ItineraryModel.find({ user: req.user?._id })
         .sort({ createdAt: -1 })
@@ -56,18 +115,14 @@ export const getHomeTab = async (req, res) => {
         .limit(5),
     ]);
 
-    const categoryMap = new Map<string, string>();
-    for (const place of placesForCategories) {
-      if (place.category && !categoryMap.has(place.category)) {
-        categoryMap.set(place.category, place.images?.[0] || '');
-      }
-    }
-
-    const categories = Array.from(categoryMap.entries()).map(([title, image]) => ({
-      id: title,
-      title,
-      image,
-    }));
+    const categories =
+      categoriesSource.length > 0
+        ? categoriesSource.map((category) => ({
+            id: toStringId(category),
+            title: category.title || '',
+            image: category.image || '',
+          }))
+        : [];
 
     const trending = topPlaces.slice(0, 6).map((place) => ({
       id: toStringId(place),
@@ -83,14 +138,41 @@ export const getHomeTab = async (req, res) => {
       images: place.images || [],
     }));
 
-    const nearbyPlaces = topPlaces.slice(0, 6).map((place) => {
+    let nearbySource = topPlaces;
+    if (lat !== null && lng !== null) {
+      try {
+        nearbySource = await getNearbyPlaces(lat, lng, 20, 50000);
+      } catch (_error) {
+        nearbySource = topPlaces;
+      }
+    }
+
+    const travelDurations =
+      lat !== null && lng !== null
+        ? await buildTravelDurationMap({ lat, lng }, nearbySource)
+        : [];
+
+    const scoredNearby = nearbySource.map((place: any, index: number) => {
+      const duration = travelDurations[index] ?? Number.POSITIVE_INFINITY;
+      return {
+        place,
+        duration,
+        score: scoreByRatingAndTime(place.ratings?.averageRating ?? 0, duration),
+      };
+    });
+
+    scoredNearby.sort((a, b) => b.score - a.score);
+
+    const nearbyPlaces = scoredNearby.slice(0, 6).map(({ place, duration }) => {
       let distance = '';
       if (lat !== null && lng !== null) {
         const placeLat = parseNumber(place.location?.latitude);
         const placeLng = parseNumber(place.location?.longitude);
         if (placeLat !== null && placeLng !== null) {
           const km = getDistanceKm(lat, lng, placeLat, placeLng);
-          distance = formatDistance(km);
+          distance = formatDuration(duration) || formatDistance(km);
+        } else if (Number.isFinite(place.distanceMeters)) {
+          distance = formatDistance(place.distanceMeters / 1000);
         }
       }
       return {
@@ -133,46 +215,67 @@ export const getExploreTab = async (req, res) => {
     const lat = parseNumber(req.query.lat);
     const lng = parseNumber(req.query.lng);
 
-    const [placesForCategories, topPlaces, places] = await Promise.all([
-      PlacesModel.find({ category: { $exists: true, $ne: '' } })
-        .select('category images')
-        .limit(100),
+    const [categoriesSource, topPlaces, places] = await Promise.all([
+      CategoryModel.find({ isActive: true }).select('title icon value'),
       PlacesModel.find({})
         .sort({ 'ratings.averageRating': -1, createdAt: -1 })
-        .select('name images ratings category location')
+        .select('name images ratings category categoryId location')
+        .populate('categoryId', 'title')
         .limit(10),
       PlacesModel.find({})
-        .select('name address images')
+        .select('name address images category categoryId')
+        .populate('categoryId', 'title')
         .limit(30),
     ]);
 
-    const categoryMap = new Map<string, string>();
-    for (const place of placesForCategories) {
-      if (place.category && !categoryMap.has(place.category)) {
-        categoryMap.set(place.category, place.images?.[0] || '');
+    const categories = categoriesSource.map((category) => ({
+      name: category.title || '',
+      icon: category.icon || '',
+      value: category.value || '',
+    }));
+
+    let trendingSource = topPlaces;
+    if (lat !== null && lng !== null) {
+      try {
+        trendingSource = await getNearbyPlaces(lat, lng, 20, 50000);
+      } catch (_error) {
+        trendingSource = topPlaces;
       }
     }
 
-    const categories = Array.from(categoryMap.entries()).map(([name, icon]) => ({
-      name,
-      icon,
-      value: name,
+    const trendingDurations =
+      lat !== null && lng !== null
+        ? await buildTravelDurationMap({ lat, lng }, trendingSource)
+        : [];
+
+    const scoredTrending = trendingSource.map((place, index) => ({
+      place,
+      duration: trendingDurations[index] ?? Number.POSITIVE_INFINITY,
+      score: scoreByRatingAndTime(
+        place.ratings?.averageRating ?? 0,
+        trendingDurations[index] ?? Number.POSITIVE_INFINITY
+      ),
     }));
 
-    const trending = topPlaces.map((place) => {
+    scoredTrending.sort((a, b) => b.score - a.score);
+
+    const trending = scoredTrending.map(({ place, duration }) => {
       let distance = '';
       if (lat !== null && lng !== null) {
         const placeLat = parseNumber(place.location?.latitude);
         const placeLng = parseNumber(place.location?.longitude);
         if (placeLat !== null && placeLng !== null) {
           const km = getDistanceKm(lat, lng, placeLat, placeLng);
-          distance = formatDistance(km);
+          distance = formatDuration(duration) || formatDistance(km);
         }
       }
       return {
         id: toStringId(place),
         name: place.name || '',
-        cuisine: place.category || '',
+        cuisine:
+          (place as any).categoryId?.title ||
+          place.category ||
+          '',
         distance,
         rating: place.ratings?.averageRating ?? 0,
         reviews: place.ratings?.numberOfRatings ?? 0,
@@ -200,30 +303,26 @@ export const getExploreTab = async (req, res) => {
 
 export const getTripsTab = async (req, res) => {
   try {
-    const itineraries = await ItineraryModel.find({ user: req.user?._id }).sort({
+    const tripsData = await TripModel.find({ user: req.user?._id }).sort({
       createdAt: -1,
     });
 
-    const trips = itineraries.map((itinerary: any) => {
-      const startDate = itinerary.startDate
-        ? new Date(itinerary.startDate).getTime()
-        : null;
-      const endDate = itinerary.endDate
-        ? new Date(itinerary.endDate).getTime()
-        : null;
+    const trips = tripsData.map((trip: any) => {
+      const startDate = trip.startDate ? new Date(trip.startDate).getTime() : null;
+      const endDate = trip.endDate ? new Date(trip.endDate).getTime() : null;
       let duration = '';
       if (startDate !== null && endDate !== null) {
         const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         duration = `${diffDays} days`;
       }
       return {
-        id: toStringId(itinerary),
-        name: itinerary.title || '',
-        destination: itinerary.description || '',
+        id: toStringId(trip),
+        name: trip.title || '',
+        destination: trip.cities?.[0]?.name || '',
         duration,
         travelers: 1,
         image: '',
-        placesCount: itinerary.places?.length || 0,
+        placesCount: trip.itinerary?.stats?.totalActivities || 0,
       };
     });
 

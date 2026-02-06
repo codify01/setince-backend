@@ -44,6 +44,43 @@ export const getAllPlaces = async () => {
     }
 }
 
+export const getNearbyPlaces = async (
+  latitude: number,
+  longitude: number,
+  limit = 10,
+  maxDistanceMeters = 50000
+) => {
+  try {
+    const places = await PlacesModel.aggregate([
+      {
+        $geoNear: {
+          near: { type: 'Point', coordinates: [longitude, latitude] },
+          distanceField: 'distanceMeters',
+          spherical: true,
+          maxDistance: maxDistanceMeters,
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          address: 1,
+          images: 1,
+          category: 1,
+          categoryId: 1,
+          ratings: 1,
+          location: 1,
+          distanceMeters: 1,
+        },
+      },
+      { $limit: limit },
+    ]);
+    return places;
+  } catch (error) {
+    console.error('Error fetching nearby places:', error);
+    throw new Error('Nearby places fetch failed');
+  }
+};
+
 export const autocompletePlaces = async (
   query: string,
   limit = 10,
@@ -67,7 +104,8 @@ export const autocompletePlaces = async (
     }
 
     const places = await PlacesModel.find(filter)
-      .select('name address images category')
+      .select('name address images category categoryId')
+      .populate('categoryId', 'title')
       .limit(limit);
 
     return places;

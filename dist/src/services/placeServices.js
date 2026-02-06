@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePlaceById = exports.updatePlaceById = exports.autocompletePlaces = exports.getAllPlaces = exports.getPlaceById = exports.createPlacesBulk = exports.createPlace = void 0;
+exports.deletePlaceById = exports.updatePlaceById = exports.autocompletePlaces = exports.getNearbyPlaces = exports.getAllPlaces = exports.getPlaceById = exports.createPlacesBulk = exports.createPlace = void 0;
 const places_model_1 = __importDefault(require("../models/places.model"));
 const createPlace = async (placeData) => {
     try {
@@ -53,6 +53,39 @@ const getAllPlaces = async () => {
     }
 };
 exports.getAllPlaces = getAllPlaces;
+const getNearbyPlaces = async (latitude, longitude, limit = 10, maxDistanceMeters = 50000) => {
+    try {
+        const places = await places_model_1.default.aggregate([
+            {
+                $geoNear: {
+                    near: { type: 'Point', coordinates: [longitude, latitude] },
+                    distanceField: 'distanceMeters',
+                    spherical: true,
+                    maxDistance: maxDistanceMeters,
+                },
+            },
+            {
+                $project: {
+                    name: 1,
+                    address: 1,
+                    images: 1,
+                    category: 1,
+                    categoryId: 1,
+                    ratings: 1,
+                    location: 1,
+                    distanceMeters: 1,
+                },
+            },
+            { $limit: limit },
+        ]);
+        return places;
+    }
+    catch (error) {
+        console.error('Error fetching nearby places:', error);
+        throw new Error('Nearby places fetch failed');
+    }
+};
+exports.getNearbyPlaces = getNearbyPlaces;
 const autocompletePlaces = async (query, limit = 10, approvedOnly) => {
     try {
         if (!query || query.trim().length < 2) {
@@ -69,7 +102,8 @@ const autocompletePlaces = async (query, limit = 10, approvedOnly) => {
             filter.approved = true;
         }
         const places = await places_model_1.default.find(filter)
-            .select('name address images category')
+            .select('name address images category categoryId')
+            .populate('categoryId', 'title')
             .limit(limit);
         return places;
     }
