@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTripById = exports.getTrips = exports.createTrip = void 0;
+exports.getAllTrips = exports.getTripById = exports.getTrips = exports.createTrip = void 0;
 const trip_model_1 = __importDefault(require("../models/trip.model"));
 const city_model_1 = __importDefault(require("../models/city.model"));
 const itineraryGenerator_service_1 = require("../services/itineraryGenerator.service");
@@ -89,3 +89,14 @@ const getTripById = async (req, res) => {
     }
 };
 exports.getTripById = getTripById;
+const getAllTrips = async (req, res) => {
+    try {
+        const trips = await trip_model_1.default.find();
+        return (0, responseHelper_1.sendSuccess)(res, 'Trips fetched successfully', trips);
+    }
+    catch (error) {
+        console.error('Error fetching trips:', error);
+        return (0, responseHelper_1.sendError)(res, 'Server error while fetching trips', 500, error?.message);
+    }
+};
+exports.getAllTrips = getAllTrips;

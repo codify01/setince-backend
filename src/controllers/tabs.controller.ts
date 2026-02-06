@@ -303,7 +303,7 @@ export const getExploreTab = async (req, res) => {
 
 export const getTripsTab = async (req, res) => {
   try {
-    const tripsData = await TripModel.find({ user: req.user?._id }).sort({
+    const tripsData = await TripModel.find().sort({
       createdAt: -1,
     });
 

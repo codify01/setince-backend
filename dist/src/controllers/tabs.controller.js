@@ -271,10 +271,10 @@ const getExploreTab = async (req, res) => {
 exports.getExploreTab = getExploreTab;
 const getTripsTab = async (req, res) => {
     try {
-        const tripsData = await trip_model_1.default.find({ user: req.user?._id }).sort({
+        const tripsData = await trip_model_1.default.find().sort({
             createdAt: -1,
         });
-        const trips = tripsData.map((trip) => {
+        let trips = tripsData.map((trip) => {
             const startDate = trip.startDate ? new Date(trip.startDate).getTime() : null;
             const endDate = trip.endDate ? new Date(trip.endDate).getTime() : null;
             let duration = '';
@@ -288,10 +288,35 @@ const getTripsTab = async (req, res) => {
                 destination: trip.cities?.[0]?.name || '',
                 duration,
                 travelers: 1,
-                image: '',
-                placesCount: trip.itinerary?.stats?.totalActivities || 0,
+                image: trip.images?.[0] || '',
             };
         });
+        if (trips.length === 0) {
+            const itineraries = await itinerary_model_1.default.find({ user: req.user?._id }).sort({
+                createdAt: -1,
+            });
+            trips = itineraries.map((itinerary) => {
+                const startDate = itinerary.startDate
+                    ? new Date(itinerary.startDate).getTime()
+                    : null;
+                const endDate = itinerary.endDate
+                    ? new Date(itinerary.endDate).getTime()
+                    : null;
+                let duration = '';
+                if (startDate !== null && endDate !== null) {
+                    const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                    duration = `${diffDays} days`;
+                }
+                return {
+                    id: toStringId(itinerary),
+                    name: itinerary.title || '',
+                    destination: itinerary.description || '',
+                    duration,
+                    travelers: 1,
+                    image: itinerary.image || '',
+                };
+            });
+        }
         return res.json({ trips });
     }
     catch (error) {
