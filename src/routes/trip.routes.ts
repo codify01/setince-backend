@@ -10,4 +10,5 @@ tripRouter.post('/', createTrip);
 tripRouter.get('/', getTrips);
 tripRouter.get('/:id', getTripById);
 
+
 export default tripRouter;

@@ -307,7 +307,7 @@ export const getTripsTab = async (req, res) => {
       createdAt: -1,
     });
 
-    const trips = tripsData.map((trip: any) => {
+    let trips = tripsData.map((trip: any) => {
       const startDate = trip.startDate ? new Date(trip.startDate).getTime() : null;
       const endDate = trip.endDate ? new Date(trip.endDate).getTime() : null;
       let duration = '';
@@ -325,6 +325,35 @@ export const getTripsTab = async (req, res) => {
         placesCount: trip.itinerary?.stats?.totalActivities || 0,
       };
     });
+
+    if (trips.length === 0) {
+      const itineraries = await ItineraryModel.find({ user: req.user?._id }).sort({
+        createdAt: -1,
+      });
+
+      trips = itineraries.map((itinerary: any) => {
+        const startDate = itinerary.startDate
+          ? new Date(itinerary.startDate).getTime()
+          : null;
+        const endDate = itinerary.endDate
+          ? new Date(itinerary.endDate).getTime()
+          : null;
+        let duration = '';
+        if (startDate !== null && endDate !== null) {
+          const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+          duration = `${diffDays} days`;
+        }
+        return {
+          id: toStringId(itinerary),
+          name: itinerary.title || '',
+          destination: itinerary.description || '',
+          duration,
+          travelers: 1,
+          image: '',
+          placesCount: itinerary.places?.length || 0,
+        };
+      });
+    }
 
     return res.json({ trips });
   } catch (error: any) {

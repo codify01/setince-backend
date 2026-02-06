@@ -95,3 +95,13 @@ export const getTripById = async (req, res) => {
     return sendError(res, 'Server error while fetching trip', 500, error?.message);
   }
 };
+
+export const getAllTrips = async (req, res) => {
+  try {
+    const trips = await TripModel.find();
+    return sendSuccess(res, 'Trips fetched successfully', trips);
+  } catch (error: any) {
+    console.error('Error fetching trips:', error);
+    return sendError(res, 'Server error while fetching trips', 500, error?.message);
+  }
+}
