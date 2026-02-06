@@ -307,6 +307,20 @@ export const getTripsTab = async (req, res) => {
       createdAt: -1,
     });
 
+    const tripPlaceIds: string[] = [];
+    tripsData.forEach((trip: any) => {
+      const day = trip.itinerary?.days?.[0];
+      const block = day?.blocks?.find((b: any) => b.type === 'activity' && b.place);
+      if (block?.place) tripPlaceIds.push(String(block.place));
+    });
+
+    const tripPlaceDocs = tripPlaceIds.length
+      ? await PlacesModel.find({ _id: { $in: tripPlaceIds } }).select('images')
+      : [];
+    const tripImageMap = new Map(
+      tripPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])
+    );
+
     let trips = tripsData.map((trip: any) => {
       const startDate = trip.startDate ? new Date(trip.startDate).getTime() : null;
       const endDate = trip.endDate ? new Date(trip.endDate).getTime() : null;
@@ -315,13 +329,16 @@ export const getTripsTab = async (req, res) => {
         const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         duration = `${diffDays} days`;
       }
+      const day = trip.itinerary?.days?.[0];
+      const block = day?.blocks?.find((b: any) => b.type === 'activity' && b.place);
+      const image = block?.place ? tripImageMap.get(String(block.place)) || '' : '';
       return {
         id: toStringId(trip),
         name: trip.title || '',
         destination: trip.cities?.[0]?.name || '',
         duration,
         travelers: 1,
-        image: trip.images?.[0] || '',
+        image,
       };
     });
 
@@ -329,6 +346,19 @@ export const getTripsTab = async (req, res) => {
       const itineraries = await ItineraryModel.find({ user: req.user?._id }).sort({
         createdAt: -1,
       });
+
+      const itineraryPlaceIds: string[] = [];
+      itineraries.forEach((itinerary: any) => {
+        const place = itinerary.places?.[0]?.place;
+        if (place) itineraryPlaceIds.push(String(place));
+      });
+
+      const itineraryPlaceDocs = itineraryPlaceIds.length
+        ? await PlacesModel.find({ _id: { $in: itineraryPlaceIds } }).select('images')
+        : [];
+      const itineraryImageMap = new Map(
+        itineraryPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])
+      );
 
       trips = itineraries.map((itinerary: any) => {
         const startDate = itinerary.startDate
@@ -342,13 +372,15 @@ export const getTripsTab = async (req, res) => {
           const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
           duration = `${diffDays} days`;
         }
+        const placeId = itinerary.places?.[0]?.place;
+        const image = placeId ? itineraryImageMap.get(String(placeId)) || '' : '';
         return {
           id: toStringId(itinerary),
           name: itinerary.title || '',
           destination: itinerary.description || '',
           duration,
           travelers: 1,
-          image: itinerary.image || '',
+          image,
         };
       });
     }
