@@ -10,6 +10,7 @@ import categoriesRouter from './src/routes/categories.routes';
 import reviewsRouter from './src/routes/reviews.routes';
 import cityRouter from './src/routes/city.routes';
 import tripRouter from './src/routes/trip.routes';
+import aiRouter from './src/routes/ai.routes';
 
 
 
@@ -36,6 +37,7 @@ app.use('/api/categories', categoriesRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/cities', cityRouter);
 app.use('/api/trips', tripRouter);
+app.use('/api/ai', aiRouter);
 
 mongooseConfig();
 

@@ -15,6 +15,7 @@ const categories_routes_1 = __importDefault(require("./src/routes/categories.rou
 const reviews_routes_1 = __importDefault(require("./src/routes/reviews.routes"));
 const city_routes_1 = __importDefault(require("./src/routes/city.routes"));
 const trip_routes_1 = __importDefault(require("./src/routes/trip.routes"));
+const ai_routes_1 = __importDefault(require("./src/routes/ai.routes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
 app.use((0, cors_1.default)());
@@ -32,6 +33,7 @@ app.use('/api/categories', categories_routes_1.default);
 app.use('/api/reviews', reviews_routes_1.default);
 app.use('/api/cities', city_routes_1.default);
 app.use('/api/trips', trip_routes_1.default);
+app.use('/api/ai', ai_routes_1.default);
 (0, mongoose_1.mongooseConfig)();
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

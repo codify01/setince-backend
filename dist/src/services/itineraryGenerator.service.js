@@ -11,12 +11,12 @@ const mapboxMatrix_service_1 = require("./mapboxMatrix.service");
 const paceConfig = (pace) => {
     switch (pace) {
         case 'relaxed':
-            return { maxActivities: 3, maxHours: 6 };
+            return { maxActivities: 2, maxHours: 6 };
         case 'packed':
-            return { maxActivities: 5, maxHours: 8 };
+            return { maxActivities: 2, maxHours: 8 };
         case 'normal':
         default:
-            return { maxActivities: 4, maxHours: 7 };
+            return { maxActivities: 2, maxHours: 7 };
     }
 };
 const toMinutes = (time) => {
