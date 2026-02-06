@@ -44,20 +44,29 @@ export const getAllPlaces = async () => {
     }
 }
 
-export const autocompletePlaces = async (query: string, limit = 10) => {
+export const autocompletePlaces = async (
+  query: string,
+  limit = 10,
+  approvedOnly?: boolean
+) => {
   try {
     if (!query || query.trim().length < 2) {
       return [];
     }
 
-    const places = await PlacesModel.find({
-      approved: true,
+    const filter: Record<string, any> = {
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
         { address: { $regex: query, $options: 'i' } },
       ],
-    })
+    };
+
+    if (approvedOnly === true) {
+      filter.approved = true;
+    }
+
+    const places = await PlacesModel.find(filter)
       .select('name address images category')
       .limit(limit);
 

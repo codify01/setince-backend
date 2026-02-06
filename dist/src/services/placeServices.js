@@ -53,19 +53,22 @@ const getAllPlaces = async () => {
     }
 };
 exports.getAllPlaces = getAllPlaces;
-const autocompletePlaces = async (query, limit = 10) => {
+const autocompletePlaces = async (query, limit = 10, approvedOnly) => {
     try {
         if (!query || query.trim().length < 2) {
             return [];
         }
-        const places = await places_model_1.default.find({
-            approved: true,
+        const filter = {
             $or: [
                 { name: { $regex: query, $options: 'i' } },
                 { description: { $regex: query, $options: 'i' } },
                 { address: { $regex: query, $options: 'i' } },
             ],
-        })
+        };
+        if (approvedOnly === true) {
+            filter.approved = true;
+        }
+        const places = await places_model_1.default.find(filter)
             .select('name address images category')
             .limit(limit);
         return places;

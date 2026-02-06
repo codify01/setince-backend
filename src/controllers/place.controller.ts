@@ -175,13 +175,16 @@ export const deletePlace = async (req, res) => {
 
 export const searchPlaces = async (req, res) => {
   try {
-    const query = String(req.query.query || '').trim();
+    const query = String(
+      req.query.query ?? req.query.q ?? req.query.search ?? ''
+    ).trim();
+    const approvedOnly = String(req.query.approved ?? '').toLowerCase() === 'true';
 
     if (query.length < 2) {
       return sendSuccess(res, 'Type to search places', []);
     }
 
-    const results = await autocompletePlaces(query, 10);
+    const results = await autocompletePlaces(query, 10, approvedOnly || undefined);
 
     return sendSuccess(
       res,
@@ -222,4 +225,3 @@ export const getPopularPlaces = async (req, res) => {
 export const getRecentPlaces = async (req, res) => {
     // Implementation for getting recent places
 };
-
