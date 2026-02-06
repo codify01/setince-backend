@@ -321,8 +321,7 @@ export const getTripsTab = async (req, res) => {
         destination: trip.cities?.[0]?.name || '',
         duration,
         travelers: 1,
-        image: '',
-        placesCount: trip.itinerary?.stats?.totalActivities || 0,
+        image: trip.images?.[0] || '',
       };
     });
 
@@ -349,8 +348,7 @@ export const getTripsTab = async (req, res) => {
           destination: itinerary.description || '',
           duration,
           travelers: 1,
-          image: '',
-          placesCount: itinerary.places?.length || 0,
+          image: itinerary.image || '',
         };
       });
     }
