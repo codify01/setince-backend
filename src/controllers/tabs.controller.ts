@@ -104,7 +104,7 @@ export const getHomeTab = async (req, res) => {
 
     const [categoriesSource, topPlaces, recentTrips] = await Promise.all([
       CategoryModel.find({ isActive: true }).select('title image'),
-      PlacesModel.find({})
+      PlacesModel.find({ approved: true })
         .sort({ 'ratings.averageRating': -1, createdAt: -1 })
         .select('name description images ratings location category categoryId')
         .populate('categoryId', 'title')
@@ -141,7 +141,7 @@ export const getHomeTab = async (req, res) => {
     let nearbySource = topPlaces;
     if (lat !== null && lng !== null) {
       try {
-        nearbySource = await getNearbyPlaces(lat, lng, 20, 50000);
+        nearbySource = await getNearbyPlaces(lat, lng, 20, 50000, true);
       } catch (_error) {
         nearbySource = topPlaces;
       }
@@ -217,12 +217,12 @@ export const getExploreTab = async (req, res) => {
 
     const [categoriesSource, topPlaces, places] = await Promise.all([
       CategoryModel.find({ isActive: true }).select('title icon value'),
-      PlacesModel.find({})
+      PlacesModel.find({ approved: true })
         .sort({ 'ratings.averageRating': -1, createdAt: -1 })
         .select('name images ratings category categoryId location')
         .populate('categoryId', 'title')
         .limit(10),
-      PlacesModel.find({})
+      PlacesModel.find({ approved: true })
         .select('name address images category categoryId')
         .populate('categoryId', 'title')
         .limit(30),
@@ -237,7 +237,7 @@ export const getExploreTab = async (req, res) => {
     let trendingSource = topPlaces;
     if (lat !== null && lng !== null) {
       try {
-        trendingSource = await getNearbyPlaces(lat, lng, 20, 50000);
+        trendingSource = await getNearbyPlaces(lat, lng, 20, 50000, true);
       } catch (_error) {
         trendingSource = topPlaces;
       }
@@ -315,7 +315,7 @@ export const getTripsTab = async (req, res) => {
     });
 
     const tripPlaceDocs = tripPlaceIds.length
-      ? await PlacesModel.find({ _id: { $in: tripPlaceIds } }).select('images')
+      ? await PlacesModel.find({ _id: { $in: tripPlaceIds }, approved: true }).select('images')
       : [];
     const tripImageMap = new Map(
       tripPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])
@@ -354,7 +354,7 @@ export const getTripsTab = async (req, res) => {
       });
 
       const itineraryPlaceDocs = itineraryPlaceIds.length
-        ? await PlacesModel.find({ _id: { $in: itineraryPlaceIds } }).select('images')
+        ? await PlacesModel.find({ _id: { $in: itineraryPlaceIds }, approved: true }).select('images')
         : [];
       const itineraryImageMap = new Map(
         itineraryPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])

@@ -48,9 +48,15 @@ export const getNearbyPlaces = async (
   latitude: number,
   longitude: number,
   limit = 10,
-  maxDistanceMeters = 50000
+  maxDistanceMeters = 50000,
+  approvedOnly = false
 ) => {
   try {
+    const geoQuery: Record<string, any> = {};
+    if (approvedOnly) {
+      geoQuery.approved = true;
+    }
+
     const places = await PlacesModel.aggregate([
       {
         $geoNear: {
@@ -58,6 +64,7 @@ export const getNearbyPlaces = async (
           distanceField: 'distanceMeters',
           spherical: true,
           maxDistance: maxDistanceMeters,
+          query: geoQuery,
         },
       },
       {

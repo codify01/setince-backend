@@ -93,7 +93,7 @@ const getHomeTab = async (req, res) => {
         const lng = parseNumber(req.query.lng);
         const [categoriesSource, topPlaces, recentTrips] = await Promise.all([
             category_model_1.default.find({ isActive: true }).select('title image'),
-            places_model_1.default.find({})
+            places_model_1.default.find({ approved: true })
                 .sort({ 'ratings.averageRating': -1, createdAt: -1 })
                 .select('name description images ratings location category categoryId')
                 .populate('categoryId', 'title')
@@ -125,7 +125,7 @@ const getHomeTab = async (req, res) => {
         let nearbySource = topPlaces;
         if (lat !== null && lng !== null) {
             try {
-                nearbySource = await (0, placeServices_1.getNearbyPlaces)(lat, lng, 20, 50000);
+                nearbySource = await (0, placeServices_1.getNearbyPlaces)(lat, lng, 20, 50000, true);
             }
             catch (_error) {
                 nearbySource = topPlaces;
@@ -196,12 +196,12 @@ const getExploreTab = async (req, res) => {
         const lng = parseNumber(req.query.lng);
         const [categoriesSource, topPlaces, places] = await Promise.all([
             category_model_1.default.find({ isActive: true }).select('title icon value'),
-            places_model_1.default.find({})
+            places_model_1.default.find({ approved: true })
                 .sort({ 'ratings.averageRating': -1, createdAt: -1 })
                 .select('name images ratings category categoryId location')
                 .populate('categoryId', 'title')
                 .limit(10),
-            places_model_1.default.find({})
+            places_model_1.default.find({ approved: true })
                 .select('name address images category categoryId')
                 .populate('categoryId', 'title')
                 .limit(30),
@@ -214,7 +214,7 @@ const getExploreTab = async (req, res) => {
         let trendingSource = topPlaces;
         if (lat !== null && lng !== null) {
             try {
-                trendingSource = await (0, placeServices_1.getNearbyPlaces)(lat, lng, 20, 50000);
+                trendingSource = await (0, placeServices_1.getNearbyPlaces)(lat, lng, 20, 50000, true);
             }
             catch (_error) {
                 trendingSource = topPlaces;
@@ -282,7 +282,7 @@ const getTripsTab = async (req, res) => {
                 tripPlaceIds.push(String(block.place));
         });
         const tripPlaceDocs = tripPlaceIds.length
-            ? await places_model_1.default.find({ _id: { $in: tripPlaceIds } }).select('images')
+            ? await places_model_1.default.find({ _id: { $in: tripPlaceIds }, approved: true }).select('images')
             : [];
         const tripImageMap = new Map(tripPlaceDocs.map((place) => [String(place._id), place.images?.[0] || '']));
         let trips = tripsData.map((trip) => {
@@ -316,7 +316,7 @@ const getTripsTab = async (req, res) => {
                     itineraryPlaceIds.push(String(place));
             });
             const itineraryPlaceDocs = itineraryPlaceIds.length
-                ? await places_model_1.default.find({ _id: { $in: itineraryPlaceIds } }).select('images')
+                ? await places_model_1.default.find({ _id: { $in: itineraryPlaceIds }, approved: true }).select('images')
                 : [];
             const itineraryImageMap = new Map(itineraryPlaceDocs.map((place) => [String(place._id), place.images?.[0] || '']));
             trips = itineraries.map((itinerary) => {
