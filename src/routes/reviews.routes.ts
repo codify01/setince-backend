@@ -6,7 +6,7 @@ import {
   recomputeAllRatings,
   updateReview,
 } from '../controllers/review.controller';
-import { protect } from '../middlewares/auth.middleware';
+import { protect, requireAdmin } from '../middlewares/auth.middleware';
 
 const reviewsRouter = Router();
 
@@ -14,6 +14,6 @@ reviewsRouter.get('/place/:placeId', listReviewsForPlace);
 reviewsRouter.post('/', protect, createReview);
 reviewsRouter.put('/:id', protect, updateReview);
 reviewsRouter.delete('/:id', protect, deleteReview);
-reviewsRouter.post('/recompute', protect, recomputeAllRatings);
+reviewsRouter.post('/recompute', protect, requireAdmin, recomputeAllRatings);
 
 export default reviewsRouter;

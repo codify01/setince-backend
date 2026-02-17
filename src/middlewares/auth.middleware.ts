@@ -6,6 +6,8 @@ interface JwtPayload {
   id: string;
 }
 
+type Role = 'user' | 'admin' | 'seller' | 'super_admin';
+
 export const protect = async (req, res, next: NextFunction) => {
   let token;
 
@@ -42,3 +44,21 @@ export const protect = async (req, res, next: NextFunction) => {
     return res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
+
+export const requireRole = (...roles: Role[]) => {
+  return (req, res, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!user || !user.role) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    next();
+  };
+};
+
+export const requireAdmin = requireRole('admin', 'super_admin');
+export const requireSuperAdmin = requireRole('super_admin');

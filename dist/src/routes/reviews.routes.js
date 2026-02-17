@@ -8,5 +8,5 @@ reviewsRouter.get('/place/:placeId', review_controller_1.listReviewsForPlace);
 reviewsRouter.post('/', auth_middleware_1.protect, review_controller_1.createReview);
 reviewsRouter.put('/:id', auth_middleware_1.protect, review_controller_1.updateReview);
 reviewsRouter.delete('/:id', auth_middleware_1.protect, review_controller_1.deleteReview);
-reviewsRouter.post('/recompute', auth_middleware_1.protect, review_controller_1.recomputeAllRatings);
+reviewsRouter.post('/recompute', auth_middleware_1.protect, auth_middleware_1.requireAdmin, review_controller_1.recomputeAllRatings);
 exports.default = reviewsRouter;

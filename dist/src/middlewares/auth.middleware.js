@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protect = void 0;
+exports.requireSuperAdmin = exports.requireAdmin = exports.requireRole = exports.protect = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const protect = async (req, res, next) => {
@@ -36,3 +36,18 @@ const protect = async (req, res, next) => {
     }
 };
 exports.protect = protect;
+const requireRole = (...roles) => {
+    return (req, res, next) => {
+        const user = req.user;
+        if (!user || !user.role) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+        if (!roles.includes(user.role)) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+        next();
+    };
+};
+exports.requireRole = requireRole;
+exports.requireAdmin = (0, exports.requireRole)('admin', 'super_admin');
+exports.requireSuperAdmin = (0, exports.requireRole)('super_admin');

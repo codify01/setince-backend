@@ -58,7 +58,7 @@ const swaggerSpec = {
           lastName: { type: 'string' },
           username: { type: 'string' },
           email: { type: 'string', format: 'email' },
-          role: { type: 'string', enum: ['user', 'admin', 'seller'] },
+          role: { type: 'string', enum: ['user', 'admin', 'seller', 'super_admin'] },
           isActive: { type: 'boolean' },
           lastLogin: { $ref: '#/components/schemas/DateTime' },
           profilePicture: { type: 'string' },
@@ -108,6 +108,7 @@ const swaggerSpec = {
               profilePic: { type: 'string' },
               firstName: { type: 'string' },
               lastName: { type: 'string' },
+              role: { type: 'string', enum: ['user', 'admin', 'seller', 'super_admin'] },
             },
           },
           token: { type: 'string' },
@@ -401,6 +402,29 @@ const swaggerSpec = {
             },
           },
           '401': { description: 'Invalid credentials' },
+          '404': { description: 'User not found' },
+        },
+      },
+    },
+    '/api/auth/admin/login': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Login an admin user',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/LoginRequest' } },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Login successful',
+            content: {
+              'application/json': { schema: { $ref: '#/components/schemas/AuthResponse' } },
+            },
+          },
+          '401': { description: 'Invalid credentials' },
+          '403': { description: 'Access denied' },
           '404': { description: 'User not found' },
         },
       },

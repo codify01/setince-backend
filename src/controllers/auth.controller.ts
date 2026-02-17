@@ -85,4 +85,43 @@ const loginUser = async (req, res) => {
 	}
 };
 
-export { addUser, loginUser };
+const adminLoginUser = async (req, res) => {
+	const { username, email, password }: { username: string; password: string; email: string } = req.body;
+	try {
+		const user = await getUserByUsernameOrEmail(username, email);
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		if (user.role !== 'admin' && user.role !== 'super_admin') {
+			return res.status(403).json({ message: 'Access denied' });
+		}
+
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) {
+			return res.status(401).json({ message: 'Invalid credentials' });
+		}
+
+		user.lastLogin = new Date();
+		await user.save();
+
+		res.status(200).json({
+			message: 'Admin login successful',
+			user: {
+				id: user._id,
+				username: user.username,
+				email: user.email,
+				profilePic: user.profilePicture,
+				firstName: user.firstName,
+				lastName: user.lastName,
+				role: user.role,
+			},
+			token: await generateToken({id:user._id, username: user.username, email: user.email})
+		});
+	} catch (error) {
+		console.error('Error logging in admin:', error);
+		res.status(500).json({ message: 'Login failed', error: error.message });
+	}
+};
+
+export { addUser, loginUser, adminLoginUser };

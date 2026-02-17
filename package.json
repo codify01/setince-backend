@@ -9,7 +9,8 @@
     "dev": "nodemon index.ts",
     "backfill:location-geo": "ts-node src/scripts/backfillLocationGeo.ts",
     "seed:initial": "ts-node src/scripts/seedCitiesAndCategories.ts",
-    "backfill:places": "ts-node src/scripts/backfillPlaces.ts"
+    "backfill:places": "ts-node src/scripts/backfillPlaces.ts",
+    "seed:super-admin": "ts-node src/scripts/createSuperAdmin.ts"
   },
   "keywords": [],
   "author": "",
