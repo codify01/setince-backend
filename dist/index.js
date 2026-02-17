@@ -16,6 +16,8 @@ const reviews_routes_1 = __importDefault(require("./src/routes/reviews.routes"))
 const city_routes_1 = __importDefault(require("./src/routes/city.routes"));
 const trip_routes_1 = __importDefault(require("./src/routes/trip.routes"));
 const ai_routes_1 = __importDefault(require("./src/routes/ai.routes"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_1 = __importDefault(require("./src/config/swagger"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
 app.use((0, cors_1.default)());
@@ -24,6 +26,10 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.get('/', (_req, res) => {
     res.send('Hello, Setince!');
 });
+app.get('/api-docs.json', (_req, res) => {
+    res.json(swagger_1.default);
+});
+app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.default));
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/itineraries', itinerary_routes_1.default);
 app.use('/api/users', user_routes_1.default);

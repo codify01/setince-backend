@@ -34,3 +34,57 @@ export const createCategory = async (req, res) => {
     return sendError(res, 'Server error while creating category', 500, error?.message);
   }
 };
+
+export const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return sendError(res, 'Category ID is required', 400);
+    }
+
+    const updateData = req.body ?? {};
+    if (Object.keys(updateData).length === 0) {
+      return sendError(res, 'No data provided for update', 400);
+    }
+
+    updateData.updatedAt = new Date();
+
+    const category = await CategoryModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!category) {
+      return sendError(res, 'Category not found', 404);
+    }
+
+    return sendSuccess(res, 'Category updated successfully', category);
+  } catch (error: any) {
+    console.error('Error updating category:', error);
+    return sendError(res, 'Server error while updating category', 500, error?.message);
+  }
+};
+
+export const deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return sendError(res, 'Category ID is required', 400);
+    }
+
+    const category = await CategoryModel.findByIdAndUpdate(
+      id,
+      { isActive: false, updatedAt: new Date() },
+      { new: true }
+    );
+
+    if (!category) {
+      return sendError(res, 'Category not found', 404);
+    }
+
+    return sendSuccess(res, 'Category deleted successfully', category);
+  } catch (error: any) {
+    console.error('Error deleting category:', error);
+    return sendError(res, 'Server error while deleting category', 500, error?.message);
+  }
+};

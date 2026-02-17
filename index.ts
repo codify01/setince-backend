@@ -11,6 +11,8 @@ import reviewsRouter from './src/routes/reviews.routes';
 import cityRouter from './src/routes/city.routes';
 import tripRouter from './src/routes/trip.routes';
 import aiRouter from './src/routes/ai.routes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './src/config/swagger';
 
 
 
@@ -25,6 +27,12 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (_req, res) => {
   res.send('Hello, Setince!');
 });
+
+app.get('/api-docs.json', (_req, res) => {
+  res.json(swaggerSpec);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 
