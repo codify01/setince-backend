@@ -20,10 +20,7 @@ exports.createUser = createUser;
 const getUserById = async (userId) => {
     try {
         const user = await user_model_1.default.findById(userId).select("-password");
-        if (!user) {
-            throw new Error("User not found");
-        }
-        return user;
+        return user || null;
     }
     catch (error) {
         console.error("Error fetching user:", error);
@@ -33,11 +30,16 @@ const getUserById = async (userId) => {
 exports.getUserById = getUserById;
 const getUserByUsernameOrEmail = async (username, email) => {
     try {
-        const user = await user_model_1.default.findOne({ $or: [{ username }, { email }] });
-        if (!user) {
-            throw new Error("User not found");
-        }
-        return user;
+        const normalizedUsername = username?.trim();
+        const normalizedEmail = email?.trim().toLowerCase();
+        const clauses = [
+            normalizedUsername ? { username: normalizedUsername } : null,
+            normalizedEmail ? { email: normalizedEmail } : null,
+        ].filter(Boolean);
+        if (clauses.length === 0)
+            return null;
+        const user = await user_model_1.default.findOne({ $or: clauses });
+        return user || null;
     }
     catch (error) {
         console.error("Error fetching user by username or email:", error);

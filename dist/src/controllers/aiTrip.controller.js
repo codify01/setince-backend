@@ -8,8 +8,11 @@ const city_model_1 = __importDefault(require("../models/city.model"));
 const trip_model_1 = __importDefault(require("../models/trip.model"));
 const itineraryGenerator_service_1 = require("../services/itineraryGenerator.service");
 const responseHelper_1 = require("../helpers/responseHelper");
+const AI_PROVIDER = (process.env.AI_PROVIDER || 'openai').toLowerCase();
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-2024-08-06';
+const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4.1';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const parseJsonSafe = (text) => {
     try {
@@ -40,8 +43,11 @@ const createTripFromPrompt = async (req, res) => {
         if (!prompt || typeof prompt !== 'string') {
             return (0, responseHelper_1.sendError)(res, 'prompt is required', 400);
         }
-        if (!OPENAI_API_KEY) {
+        if (AI_PROVIDER === 'openai' && !OPENAI_API_KEY) {
             return (0, responseHelper_1.sendError)(res, 'OPENAI_API_KEY is not set', 500);
+        }
+        if (AI_PROVIDER === 'gemini' && !GEMINI_API_KEY) {
+            return (0, responseHelper_1.sendError)(res, 'GEMINI_API_KEY is not set', 500);
         }
         const system = [
             'You are a travel planning assistant.',
@@ -77,35 +83,100 @@ const createTripFromPrompt = async (req, res) => {
             },
             required: ['cities', 'missing'],
         };
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${OPENAI_API_KEY}`,
-            },
-            body: JSON.stringify({
-                model: OPENAI_MODEL,
-                temperature: 0.2,
-                messages: [
-                    { role: 'system', content: system },
-                    { role: 'user', content: prompt },
-                ],
-                response_format: {
-                    type: 'json_schema',
-                    json_schema: {
-                        name: 'trip_intent',
-                        strict: true,
-                        schema,
-                    },
+        let content = '';
+        if (AI_PROVIDER === 'openai') {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${OPENAI_API_KEY}`,
                 },
-            }),
-        });
-        if (!response.ok) {
-            const text = await response.text();
-            return (0, responseHelper_1.sendError)(res, `OpenAI error: ${text}`, 502);
+                body: JSON.stringify({
+                    model: OPENAI_MODEL,
+                    temperature: 0.2,
+                    messages: [
+                        { role: 'system', content: system },
+                        { role: 'user', content: prompt },
+                    ],
+                    response_format: {
+                        type: 'json_schema',
+                        json_schema: {
+                            name: 'trip_intent',
+                            strict: true,
+                            schema,
+                        },
+                    },
+                }),
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                return (0, responseHelper_1.sendError)(res, `OpenAI error: ${text}`, 502);
+            }
+            const data = await response.json();
+            content = data?.choices?.[0]?.message?.content || '';
         }
-        const data = await response.json();
-        const content = data?.choices?.[0]?.message?.content || '';
+        else if (AI_PROVIDER === 'gemini') {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`;
+            const buildGeminiBody = (useSnakeCase) => {
+                if (useSnakeCase) {
+                    return {
+                        system_instruction: {
+                            parts: [{ text: system }],
+                        },
+                        contents: [
+                            {
+                                role: 'user',
+                                parts: [{ text: prompt }],
+                            },
+                        ],
+                        generation_config: {
+                            temperature: 0.2,
+                            response_mime_type: 'application/json',
+                            response_json_schema: schema,
+                        },
+                    };
+                }
+                return {
+                    systemInstruction: {
+                        parts: [{ text: system }],
+                    },
+                    contents: [
+                        {
+                            role: 'user',
+                            parts: [{ text: prompt }],
+                        },
+                    ],
+                    generationConfig: {
+                        temperature: 0.2,
+                        responseMimeType: 'application/json',
+                        responseJsonSchema: schema,
+                    },
+                };
+            };
+            const runGeminiRequest = async (useSnakeCase) => fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': GEMINI_API_KEY,
+                },
+                body: JSON.stringify(buildGeminiBody(useSnakeCase)),
+            });
+            let response = await runGeminiRequest(false);
+            if (!response.ok) {
+                const _ = await response.text();
+                response = await runGeminiRequest(true);
+            }
+            if (!response.ok) {
+                const text = await response.text();
+                return (0, responseHelper_1.sendError)(res, `Gemini error: ${text}`, 502);
+            }
+            const data = await response.json();
+            const parts = data?.candidates?.[0]?.content?.parts || [];
+            content = parts.map((part) => part?.text || '').join('');
+        }
+        else {
+            return (0, responseHelper_1.sendError)(res, `Unsupported AI provider: ${AI_PROVIDER}`, 400);
+        }
         const parsed = parseJsonSafe(content);
         if (!parsed) {
             return (0, responseHelper_1.sendError)(res, 'Failed to parse AI response', 502);

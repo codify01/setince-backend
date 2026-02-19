@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addUser, adminLoginUser, loginUser } from "../controllers/auth.controller";
+import { addUser, adminLoginUser, loginUser, socialLogin } from "../controllers/auth.controller";
 
 const authRouter = Router();
 
@@ -9,6 +9,7 @@ const authRouter = Router();
 authRouter.post("/register", addUser)
 authRouter.post("/login", loginUser)
 authRouter.post("/admin/login", adminLoginUser)
+authRouter.post("/social", socialLogin)
 
 
 

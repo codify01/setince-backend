@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminLoginUser = exports.loginUser = exports.addUser = void 0;
+exports.socialLogin = exports.adminLoginUser = exports.loginUser = exports.addUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const userService_1 = require("../services/userService");
@@ -14,8 +14,10 @@ const addUser = async (req, res) => {
         if (!firstName || !lastName || !username || !email || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
+        const normalizedEmail = email.toLowerCase().trim();
+        const normalizedUsername = username.trim();
         const existingUser = await user_model_1.default.findOne({
-            $or: [{ email }, { username }],
+            $or: [{ email: normalizedEmail }, { username: normalizedUsername }],
         });
         if (existingUser) {
             return res.status(409).json({
@@ -28,8 +30,8 @@ const addUser = async (req, res) => {
         const newUser = await (0, userService_1.createUser)({
             firstName,
             lastName,
-            username,
-            email: email.toLowerCase().trim(),
+            username: normalizedUsername,
+            email: normalizedEmail,
             password: hashedPassword,
         });
         const token = await (0, generateToken_1.generateToken)({ id: newUser._id, username: newUser.username, email: newUser.email });
@@ -39,6 +41,9 @@ const addUser = async (req, res) => {
                 id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                profilePic: newUser.profilePicture,
             },
             token
         });
@@ -52,6 +57,9 @@ exports.addUser = addUser;
 const loginUser = async (req, res) => {
     const { username, email, password } = req.body;
     try {
+        if ((!username && !email) || !password) {
+            return res.status(400).json({ message: 'Username or email and password are required' });
+        }
         const user = await (0, userService_1.getUserByUsernameOrEmail)(username, email);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -84,6 +92,9 @@ exports.loginUser = loginUser;
 const adminLoginUser = async (req, res) => {
     const { username, email, password } = req.body;
     try {
+        if ((!username && !email) || !password) {
+            return res.status(400).json({ message: 'Username or email and password are required' });
+        }
         const user = await (0, userService_1.getUserByUsernameOrEmail)(username, email);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -117,3 +128,54 @@ const adminLoginUser = async (req, res) => {
     }
 };
 exports.adminLoginUser = adminLoginUser;
+const socialLogin = async (req, res) => {
+    const { email, firstName, lastName } = req.body;
+    try {
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+        const normalizedEmail = email.toLowerCase().trim();
+        let user = await user_model_1.default.findOne({ email: normalizedEmail });
+        if (!user) {
+            const normalizedFirst = firstName?.trim();
+            const normalizedLast = lastName?.trim();
+            const baseUsernameRaw = [normalizedFirst, normalizedLast].filter(Boolean).join('') ||
+                normalizedEmail.split('@')[0] ||
+                'user';
+            const baseUsername = baseUsernameRaw.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user';
+            let usernameCandidate = baseUsername;
+            let counter = 0;
+            while (await user_model_1.default.exists({ username: usernameCandidate })) {
+                counter += 1;
+                usernameCandidate = `${baseUsername}${counter}`;
+            }
+            const randomPassword = Math.random().toString(36).slice(-12);
+            const hashedPassword = await bcryptjs_1.default.hash(randomPassword, 12);
+            user = await (0, userService_1.createUser)({
+                firstName: normalizedFirst || 'user',
+                lastName: normalizedLast || 'user',
+                username: usernameCandidate,
+                email: normalizedEmail,
+                password: hashedPassword,
+                isActive: true,
+            });
+        }
+        return res.status(200).json({
+            message: 'Social login successful',
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                profilePic: user.profilePicture,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            },
+            token: await (0, generateToken_1.generateToken)({ id: user._id, username: user.username, email: user.email })
+        });
+    }
+    catch (error) {
+        console.error('Error logging in with social provider:', error);
+        return res.status(500).json({ message: 'Social login failed', error: error.message });
+    }
+};
+exports.socialLogin = socialLogin;

@@ -94,6 +94,7 @@ const getUserSummary = (user: any) => ({
   firstName: user?.firstName || '',
   lastName: user?.lastName || '',
   username: user?.username || '',
+  email: user?.email || '',
   avatar: user?.profilePicture || '',
 });
 
@@ -303,7 +304,7 @@ export const getExploreTab = async (req, res) => {
 
 export const getTripsTab = async (req, res) => {
   try {
-    const tripsData = await TripModel.find().sort({
+    const tripsData = await TripModel.find({ user: req.user?._id }).sort({
       createdAt: -1,
     });
 
@@ -311,14 +312,33 @@ export const getTripsTab = async (req, res) => {
     tripsData.forEach((trip: any) => {
       const day = trip.itinerary?.days?.[0];
       const block = day?.blocks?.find((b: any) => b.type === 'activity' && b.place);
-      if (block?.place) tripPlaceIds.push(String(block.place));
+      const placeId = block?.place || trip.selectedPlaces?.[0];
+      if (placeId) tripPlaceIds.push(String(placeId));
     });
 
     const tripPlaceDocs = tripPlaceIds.length
       ? await PlacesModel.find({ _id: { $in: tripPlaceIds }, approved: true }).select('images')
       : [];
+    const shuffle = (items: string[]) => {
+      const arr = items.slice();
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    const collectImages = (docs: any[]) =>
+      docs.flatMap((place: any) =>
+        Array.isArray(place.images) ? place.images.filter(Boolean) : []
+      );
+
+    const tripImagePool = shuffle(collectImages(tripPlaceDocs));
     const tripImageMap = new Map(
-      tripPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])
+      tripPlaceDocs.map((place: any, index: number) => [
+        String(place._id),
+        tripImagePool.length > 0 ? tripImagePool[index % tripImagePool.length] : '',
+      ])
     );
 
     let trips = tripsData.map((trip: any) => {
@@ -331,11 +351,13 @@ export const getTripsTab = async (req, res) => {
       }
       const day = trip.itinerary?.days?.[0];
       const block = day?.blocks?.find((b: any) => b.type === 'activity' && b.place);
-      const image = block?.place ? tripImageMap.get(String(block.place)) || '' : '';
+      const placeId = block?.place || trip.selectedPlaces?.[0];
+      const image = placeId ? tripImageMap.get(String(placeId)) || '' : '';
       return {
         id: toStringId(trip),
         name: trip.title || '',
         destination: trip.cities?.[0]?.name || '',
+        cities: (trip.cities || []).map((city: any) => city?.name || '').filter(Boolean),
         duration,
         travelers: 1,
         image,
@@ -356,11 +378,15 @@ export const getTripsTab = async (req, res) => {
       const itineraryPlaceDocs = itineraryPlaceIds.length
         ? await PlacesModel.find({ _id: { $in: itineraryPlaceIds }, approved: true }).select('images')
         : [];
-      const itineraryImageMap = new Map(
-        itineraryPlaceDocs.map((place: any) => [String(place._id), place.images?.[0] || ''])
-      );
+      const fallbackImages = [
+        'https://res.cloudinary.com/dpffwzcd8/image/upload/v1757672125/bbb1_grag8t.jpg',
+        'https://res.cloudinary.com/dpffwzcd8/image/upload/v1757674141/cocoa-house2_bgnkfp.png',
+        'https://res.cloudinary.com/dpffwzcd8/image/upload/v1757601878/cocoa-house1_aat7dx.jpg',
+        'https://res.cloudinary.com/dpffwzcd8/image/upload/v1712135844/samples/balloons.jpg',
+      ];
+      const fallbackImagePool = shuffle(fallbackImages);
 
-      trips = itineraries.map((itinerary: any) => {
+      trips = itineraries.map((itinerary: any, index: number) => {
         const startDate = itinerary.startDate
           ? new Date(itinerary.startDate).getTime()
           : null;
@@ -372,12 +398,15 @@ export const getTripsTab = async (req, res) => {
           const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
           duration = `${diffDays} days`;
         }
-        const placeId = itinerary.places?.[0]?.place;
-        const image = placeId ? itineraryImageMap.get(String(placeId)) || '' : '';
+        const image =
+          fallbackImagePool.length > 0
+            ? fallbackImagePool[index % fallbackImagePool.length]
+            : "https://res.cloudinary.com/dpffwzcd8/image/upload/v1712135844/samples/balloons.jpg";
         return {
           id: toStringId(itinerary),
           name: itinerary.title || '',
           destination: itinerary.description || '',
+          cities: [],
           duration,
           travelers: 1,
           image,
