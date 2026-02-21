@@ -8,6 +8,8 @@ const tripSchema = new mongoose_1.default.Schema({
     user: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true, trim: true },
     description: { type: String },
+    travelers: { type: Number },
+    image: { type: String },
     cities: [
         {
             city: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'City', required: true },
@@ -41,6 +43,7 @@ const tripSchema = new mongoose_1.default.Schema({
                         city: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'City' },
                         travelMinutes: { type: Number },
                         notes: { type: String },
+                        completed: { type: Boolean, default: false },
                     },
                 ],
                 summary: {

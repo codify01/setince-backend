@@ -270,6 +270,7 @@ const generateItinerary = async (input) => {
                         endTime: toTime(cursor + travelMinutes),
                         travelMinutes,
                         city: cityId ? new mongoose_1.default.Types.ObjectId(cityId) : undefined,
+                        completed: false,
                     });
                     cursor += travelMinutes;
                 }
@@ -286,6 +287,7 @@ const generateItinerary = async (input) => {
                     endTime: toTime(cursor + duration),
                     city: cityId ? new mongoose_1.default.Types.ObjectId(cityId) : undefined,
                     notes: place.category || '',
+                    completed: false,
                 });
                 cursor += duration;
                 hoursPlanned += duration / 60;
@@ -301,6 +303,7 @@ const generateItinerary = async (input) => {
                             startTime: toTime(cursor),
                             endTime: toTime(cursor + mealDuration),
                             city: cityId ? new mongoose_1.default.Types.ObjectId(cityId) : undefined,
+                            completed: false,
                         });
                         cursor += mealDuration;
                         hoursPlanned += mealDuration / 60;
@@ -316,6 +319,7 @@ const generateItinerary = async (input) => {
                     startTime: toTime(cursor),
                     endTime: toTime(dayEnd),
                     city: cityId ? new mongoose_1.default.Types.ObjectId(cityId) : undefined,
+                    completed: false,
                 });
             }
             days.push({
@@ -346,12 +350,14 @@ const generateItinerary = async (input) => {
                         startTime: toTime(startHour * 60),
                         endTime: toTime(endHour * 60),
                         notes: 'Travel day',
+                        completed: false,
                     },
                     {
                         type: 'free_time',
                         title: 'Arrival and rest',
                         startTime: toTime(endHour * 60),
                         endTime: toTime((endHour + 2) * 60),
+                        completed: false,
                     },
                 ],
                 summary: {

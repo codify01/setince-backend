@@ -8,4 +8,6 @@ tripRouter.use(auth_middleware_1.protect);
 tripRouter.post('/', trip_controller_1.createTrip);
 tripRouter.get('/', trip_controller_1.getTrips);
 tripRouter.get('/:id', trip_controller_1.getTripById);
+tripRouter.patch('/:id', trip_controller_1.updateTrip);
+tripRouter.delete('/clear-all', trip_controller_1.clearTripsAndItineraries);
 exports.default = tripRouter;
