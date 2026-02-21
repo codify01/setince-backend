@@ -24,6 +24,7 @@ export interface ItineraryBlock {
   city?: mongoose.Types.ObjectId;
   travelMinutes?: number;
   notes?: string;
+  completed?: boolean;
 }
 
 export interface ItineraryDay {
@@ -43,6 +44,8 @@ export interface Trip {
   user: mongoose.Types.ObjectId;
   title: string;
   description?: string;
+  travelers?: number;
+  image?: string;
   cities: TripCity[];
   startDate: Date;
   endDate: Date;
@@ -66,6 +69,8 @@ const tripSchema = new mongoose.Schema<Trip>(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true, trim: true },
     description: { type: String },
+    travelers: { type: Number },
+    image: { type: String },
     cities: [
       {
         city: { type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true },
@@ -99,6 +104,7 @@ const tripSchema = new mongoose.Schema<Trip>(
               city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
               travelMinutes: { type: Number },
               notes: { type: String },
+              completed: { type: Boolean, default: false },
             },
           ],
           summary: {

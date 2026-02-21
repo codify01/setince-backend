@@ -1,6 +1,6 @@
 import TripModel from '../models/trip.model';
+import ItineraryModel from '../models/itinerary.model';
 import CityModel from '../models/city.model';
-import { generateItinerary } from '../services/itineraryGenerator.service';
 import { sendError, sendSuccess } from '../helpers/responseHelper';
 
 export const createTrip = async (req, res) => {
@@ -8,6 +8,8 @@ export const createTrip = async (req, res) => {
     const {
       title,
       description,
+      travelers,
+      image,
       cities,
       startDate,
       endDate,
@@ -35,6 +37,8 @@ export const createTrip = async (req, res) => {
       user: req.user._id,
       title,
       description,
+      travelers,
+      image,
       cities: normalizedCities,
       startDate,
       endDate,
@@ -49,22 +53,6 @@ export const createTrip = async (req, res) => {
       status: 'draft',
     });
 
-    const itinerary = await generateItinerary({
-      startDate: trip.startDate,
-      endDate: trip.endDate,
-      cities: normalizedCities.map((c) => ({ cityId: String(c.city), name: c.name })),
-      pace: trip.preferences.pace,
-      interests: trip.preferences.interests,
-      allowSameDayCityTravel: trip.preferences.allowSameDayCityTravel,
-      preferredStartHour: trip.preferences.preferredStartHour,
-      preferredEndHour: trip.preferences.preferredEndHour,
-      selectedPlaceIds: selectedPlaces || [],
-    });
-
-    trip.itinerary = itinerary;
-    trip.status = 'generated';
-    await trip.save();
-
     return sendSuccess(res, 'Trip created successfully', trip, 201);
   } catch (error: any) {
     console.error('Error creating trip:', error);
@@ -74,8 +62,11 @@ export const createTrip = async (req, res) => {
 
 export const getTrips = async (req, res) => {
   try {
-    const trips = await TripModel.find({ user: req.user._id }).sort({ createdAt: -1 });
-    return sendSuccess(res, 'Trips fetched successfully', trips);
+    const trips = await TripModel.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .populate('itinerary.days.blocks.place', 'name category ratings images');
+    const formattedTrips = trips.map((trip) => formatTripDetail(trip));
+    return sendSuccess(res, 'Trips fetched successfully', formattedTrips);
   } catch (error: any) {
     console.error('Error fetching trips:', error);
     return sendError(res, 'Server error while fetching trips', 500, error?.message);
@@ -85,14 +76,169 @@ export const getTrips = async (req, res) => {
 export const getTripById = async (req, res) => {
   try {
     const { id } = req.params;
+    const trip = await TripModel.findOne({ _id: id, user: req.user._id }).populate(
+      'itinerary.days.blocks.place',
+      'name category ratings images'
+    );
+    if (!trip) {
+      return sendError(res, 'Trip not found', 404);
+    }
+    return sendSuccess(res, 'Trip fetched successfully', formatTripDetail(trip));
+  } catch (error: any) {
+    console.error('Error fetching trip:', error);
+    return sendError(res, 'Server error while fetching trip', 500, error?.message);
+  }
+};
+
+const normalizeCities = async (cities: any[]) => {
+  if (!Array.isArray(cities) || cities.length === 0) return [];
+  const cityIds = cities.map((c) => c.cityId || c._id).filter(Boolean);
+  const cityDocs = await CityModel.find({ _id: { $in: cityIds } }).select('name');
+  return cities.map((city) => {
+    const id = city.cityId || city._id;
+    const found = cityDocs.find((doc) => String(doc._id) === String(id));
+    return {
+      city: id,
+      name: city.name || found?.name || '',
+    };
+  });
+};
+
+const normalizeItinerary = (itinerary: any) => {
+  if (!itinerary || !Array.isArray(itinerary.days)) return itinerary;
+  return {
+    ...itinerary,
+    days: itinerary.days.map((day) => ({
+      ...day,
+      blocks: Array.isArray(day.blocks)
+        ? day.blocks.map((block) => ({
+            ...block,
+            completed:
+              typeof block.completed === 'boolean'
+                ? block.completed
+                : typeof block.done === 'boolean'
+                ? block.done
+                : false,
+          }))
+        : [],
+    })),
+  };
+};
+
+const formatPlaceSummary = (place: any) => {
+  if (!place || typeof place !== 'object') return place;
+  return {
+    _id: place._id,
+    name: place.name,
+    category: place.category,
+    rating: place.ratings?.averageRating ?? 0,
+    images: place.images || [],
+  };
+};
+
+const formatTripDetail = (trip: any) => {
+  const obj = typeof trip.toObject === 'function' ? trip.toObject() : trip;
+  if (!obj?.itinerary?.days) return obj;
+  return {
+    ...obj,
+    itinerary: {
+      ...obj.itinerary,
+      days: obj.itinerary.days.map((day) => ({
+        ...day,
+        blocks: Array.isArray(day.blocks)
+          ? day.blocks.map((block) => ({
+              ...block,
+              completed:
+                typeof block.completed === 'boolean'
+                  ? block.completed
+                  : typeof block.done === 'boolean'
+                  ? block.done
+                  : false,
+              place: formatPlaceSummary(block.place),
+            }))
+          : [],
+      })),
+    },
+  };
+};
+
+export const updateTrip = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      travelers,
+      image,
+      cities,
+      startDate,
+      endDate,
+      preferences,
+      selectedPlaces,
+      itinerary,
+      status,
+    } = req.body;
+
     const trip = await TripModel.findOne({ _id: id, user: req.user._id });
     if (!trip) {
       return sendError(res, 'Trip not found', 404);
     }
-    return sendSuccess(res, 'Trip fetched successfully', trip);
+
+    if (typeof title !== 'undefined') trip.title = title;
+    if (typeof description !== 'undefined') trip.description = description;
+    if (typeof travelers !== 'undefined') trip.travelers = travelers;
+    if (typeof image !== 'undefined') trip.image = image;
+    if (typeof startDate !== 'undefined') trip.startDate = startDate;
+    if (typeof endDate !== 'undefined') trip.endDate = endDate;
+    if (typeof selectedPlaces !== 'undefined') trip.selectedPlaces = selectedPlaces;
+    if (typeof status !== 'undefined') trip.status = status;
+
+    if (typeof cities !== 'undefined') {
+      const normalizedCities = await normalizeCities(cities);
+      if (normalizedCities.length === 0) {
+        return sendError(res, 'cities must be a non-empty array', 400);
+      }
+      trip.cities = normalizedCities;
+    }
+
+    if (typeof preferences !== 'undefined') {
+      trip.preferences = {
+        pace: preferences?.pace ?? trip.preferences?.pace ?? 'normal',
+        interests: preferences?.interests ?? trip.preferences?.interests ?? [],
+        allowSameDayCityTravel:
+          preferences?.allowSameDayCityTravel ??
+          trip.preferences?.allowSameDayCityTravel ??
+          false,
+        preferredStartHour:
+          preferences?.preferredStartHour ?? trip.preferences?.preferredStartHour ?? 9,
+        preferredEndHour:
+          preferences?.preferredEndHour ?? trip.preferences?.preferredEndHour ?? 18,
+      };
+    }
+
+    if (typeof itinerary !== 'undefined') {
+      trip.itinerary = normalizeItinerary(itinerary);
+    }
+
+    await trip.save();
+    return sendSuccess(res, 'Trip updated successfully', trip);
   } catch (error: any) {
-    console.error('Error fetching trip:', error);
-    return sendError(res, 'Server error while fetching trip', 500, error?.message);
+    console.error('Error updating trip:', error);
+    return sendError(res, 'Server error while updating trip', 500, error?.message);
+  }
+};
+
+export const clearTripsAndItineraries = async (req, res) => {
+  try {
+    const tripResult = await TripModel.deleteMany({});
+    const itineraryResult = await ItineraryModel.deleteMany({});
+    return sendSuccess(res, 'Trips and itineraries cleared', {
+      tripsDeleted: tripResult.deletedCount ?? 0,
+      itinerariesDeleted: itineraryResult.deletedCount ?? 0,
+    });
+  } catch (error: any) {
+    console.error('Error clearing trips and itineraries:', error);
+    return sendError(res, 'Server error while clearing trips and itineraries', 500, error?.message);
   }
 };
 

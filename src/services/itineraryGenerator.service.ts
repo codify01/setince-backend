@@ -36,6 +36,7 @@ type ItineraryResult = {
       city?: mongoose.Types.ObjectId;
       travelMinutes?: number;
       notes?: string;
+      completed?: boolean;
     }[];
     summary: {
       totalActivities: number;
@@ -354,6 +355,7 @@ export const generateItinerary = async (input: TripInput): Promise<ItineraryResu
             endTime: toTime(cursor + travelMinutes),
             travelMinutes,
             city: cityId ? new mongoose.Types.ObjectId(cityId) : undefined,
+            completed: false,
           });
           cursor += travelMinutes;
         }
@@ -372,6 +374,7 @@ export const generateItinerary = async (input: TripInput): Promise<ItineraryResu
           endTime: toTime(cursor + duration),
           city: cityId ? new mongoose.Types.ObjectId(cityId) : undefined,
           notes: place.category || '',
+          completed: false,
         });
 
         cursor += duration;
@@ -389,6 +392,7 @@ export const generateItinerary = async (input: TripInput): Promise<ItineraryResu
               startTime: toTime(cursor),
               endTime: toTime(cursor + mealDuration),
               city: cityId ? new mongoose.Types.ObjectId(cityId) : undefined,
+              completed: false,
             });
             cursor += mealDuration;
             hoursPlanned += mealDuration / 60;
@@ -405,6 +409,7 @@ export const generateItinerary = async (input: TripInput): Promise<ItineraryResu
           startTime: toTime(cursor),
           endTime: toTime(dayEnd),
           city: cityId ? new mongoose.Types.ObjectId(cityId) : undefined,
+          completed: false,
         });
       }
 
@@ -438,12 +443,14 @@ export const generateItinerary = async (input: TripInput): Promise<ItineraryResu
             startTime: toTime(startHour * 60),
             endTime: toTime(endHour * 60),
             notes: 'Travel day',
+            completed: false,
           },
           {
             type: 'free_time',
             title: 'Arrival and rest',
             startTime: toTime(endHour * 60),
             endTime: toTime((endHour + 2) * 60),
+            completed: false,
           },
         ],
         summary: {

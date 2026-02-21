@@ -263,12 +263,27 @@ const swaggerSpec = {
         properties: {
           type: { type: 'string', enum: ['activity', 'travel', 'free_time', 'meal', 'rest'] },
           title: { type: 'string' },
-          place: { $ref: '#/components/schemas/ObjectId' },
+          place: {
+            oneOf: [
+              { $ref: '#/components/schemas/ObjectId' },
+              {
+                type: 'object',
+                properties: {
+                  _id: { $ref: '#/components/schemas/ObjectId' },
+                  name: { type: 'string' },
+                  category: { type: 'string' },
+                  rating: { type: 'number' },
+                  images: { type: 'array', items: { type: 'string' } },
+                },
+              },
+            ],
+          },
           startTime: { type: 'string', example: '09:00' },
           endTime: { type: 'string', example: '10:30' },
           city: { $ref: '#/components/schemas/ObjectId' },
           travelMinutes: { type: 'number' },
           notes: { type: 'string' },
+          completed: { type: 'boolean' },
         },
       },
       ItineraryDay: {
@@ -295,6 +310,8 @@ const swaggerSpec = {
           user: { $ref: '#/components/schemas/ObjectId' },
           title: { type: 'string' },
           description: { type: 'string' },
+          travelers: { type: 'number' },
+          image: { type: 'string' },
           cities: { type: 'array', items: { $ref: '#/components/schemas/TripCity' } },
           startDate: { $ref: '#/components/schemas/Date' },
           endDate: { $ref: '#/components/schemas/Date' },
@@ -781,6 +798,14 @@ const swaggerSpec = {
         },
       },
     },
+    // '/api/trips/clear-all': {
+    //   delete: {
+    //     tags: ['Trips'],
+    //     summary: 'Clear all trips and itineraries (admin only)',
+    //     security: [{ bearerAuth: [] }],
+    //     responses: { '200': { description: 'Trips and itineraries cleared' } },
+    //   },
+    // },
     '/api/trips/{id}': {
       get: {
         tags: ['Trips'],
@@ -790,6 +815,21 @@ const swaggerSpec = {
           { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
         ],
         responses: { '200': { description: 'Trip fetched' } },
+      },
+      patch: {
+        tags: ['Trips'],
+        summary: 'Update a trip',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/Trip' } },
+          },
+        },
+        responses: { '200': { description: 'Trip updated' } },
       },
     },
     '/api/itineraries': {
